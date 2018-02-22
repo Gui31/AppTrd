@@ -1,0 +1,58 @@
+﻿<view:BaseView x:Class="AppTrd.BaseLib.View.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:view="clr-namespace:AppTrd.BaseLib.View"
+                 mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Margin="40 0">
+    <StackPanel IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBooleanConverter}}">
+        <TextBlock Text="IG API Login" TextAlignment="Center" FontSize="20" />
+
+        <Grid Margin="0 10 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Username" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding Username}" Grid.Row="0" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+
+            <TextBlock Text="Api Key" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding ApiKey}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+
+            <TextBlock Text="Password" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+            <PasswordBox x:Name="LoginPasswordBox" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+
+            <CheckBox Content="Use demo server" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding UseDemo, Mode=TwoWay}" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+
+            <CheckBox Content="Save login (Password will not be saved)" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding SaveLogin, Mode=TwoWay}" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+
+            <TextBlock Text="Account" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"  IsEnabled="{Binding IsLogged}" VerticalAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding AccountName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </Grid>
+
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red"/>
+
+        <StackPanel HorizontalAlignment="Right" Margin="0 0 0 0">
+            <Button Content="Login" Click="LoginButtonClick" Visibility="{Binding IsLogged, Converter={StaticResource InvertBooleanToVisibilityConverter}}" Padding="20 10" Margin="20 10" />
+            <Button Content="Connect" Command="{Binding ConnectCommand}" Visibility="{Binding IsLogged, Converter={StaticResource BooleanToVisibilityConverter}}" Padding="20 10" Margin="20 10" />
+        </StackPanel>
+    </StackPanel>
+</view:BaseView>
+

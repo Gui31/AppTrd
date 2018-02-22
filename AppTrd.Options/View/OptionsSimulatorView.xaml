@@ -1,0 +1,72 @@
+﻿<view:BaseView x:Class="AppTrd.Options.View.OptionsSimulatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AppTrd.Options.View"
+             xmlns:common="clr-namespace:AppTrd.BaseLib.Common;assembly=AppTrd.BaseLib"
+             xmlns:item="clr-namespace:AppTrd.Options.ViewModel.Item"
+             xmlns:control="clr-namespace:AppTrd.Options.Control"
+             xmlns:view="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Go back" Command="{Binding GoBackCommand}" />
+                <Button Content="Calculate" Command="{Binding UpdateCommand}" />
+                <ToggleButton x:Name="HideOptionsButton" Content="Hide options" />
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding Options}" Visibility="{Binding ElementName=HideOptionsButton, Path=IsChecked, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" />
+                            <ComboBox SelectedItem="{Binding Action, Mode=TwoWay}">
+                                <item:OptionActions>None</item:OptionActions>
+                                <item:OptionActions>Buy</item:OptionActions>
+                                <item:OptionActions>Sell</item:OptionActions>
+                            </ComboBox>
+
+                            <TextBlock Text="Prime: "/>
+                            <TextBox Text="{Binding CurrentPrime, Mode=TwoWay}" />
+                            <TextBlock>
+                                <Run Text="(" />
+                                <Run Text="{Binding Prime}" />
+                                <Run Text=")" />
+                            </TextBlock>
+
+                            <TextBlock Text="Quantity: "/>
+                            <TextBox Text="{Binding Quantity, Mode=TwoWay}" />
+
+                            <TextBlock Text="Spread: "/>
+                            <TextBox Text="{Binding Spread, Mode=TwoWay}"/>
+
+                            <TextBlock Text="Volatility: "/>
+                            <TextBox Text="{Binding Volatility, Mode=TwoWay}"/>
+
+                            <TextBlock Text="Interest rate: "/>
+                            <TextBox Text="{Binding InterestRate, Mode=TwoWay}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <control:OptionsSimulationControl Grid.Row="1" 
+                                          x:Name="SimuControl"
+                                          Options="{Binding Options}" 
+                                          EndDate="{Binding EndDate}" 
+                                          MinPrice="{Binding MinPrice}"
+                                          MaxPrice="{Binding MaxPrice}"
+                                          LastUpdate="{Binding LastUpdate}"
+                                          CurrentPrice="{Binding CurrentPrice}"/>
+    </Grid>
+</view:BaseView>
+

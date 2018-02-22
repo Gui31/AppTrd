@@ -1,0 +1,22 @@
+<Application x:Class="AppTrd.Charts.App" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:AppTrd.Charts" 
+             StartupUri="MainWindow.xaml" 
+             ShutdownMode="OnLastWindowClose"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             d1p1:Ignorable="d" 
+             xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AppTrd.BaseLib;component/Resources/Converters.xaml" />
+                <ResourceDictionary Source="/AppTrd.Charts;component/Resources/ViewTemplate.xaml" />
+
+                <ResourceDictionary>
+                    <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:AppTrd.Charts.ViewModel" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

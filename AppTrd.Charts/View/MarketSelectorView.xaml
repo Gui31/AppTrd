@@ -1,0 +1,62 @@
+﻿<view:BaseView x:Class="AppTrd.Charts.View.MarketSelectorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:common="clr-namespace:AppTrd.BaseLib.Common;assembly=AppTrd.BaseLib"
+             xmlns:model="clr-namespace:AppTrd.BaseLib.Model;assembly=AppTrd.BaseLib"
+             xmlns:view="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Content="Go back" Command="{Binding BrowseBackCommand}" />
+
+        <ListBox Grid.Row="1" HorizontalContentAlignment="Stretch">
+            <ListBox.Resources>
+                <CollectionViewSource x:Key="nodesSource" Source="{Binding Browse.Nodes}" />
+                <CollectionViewSource x:Key="marketsSource" Source="{Binding Browse.Markets}" />
+
+                <DataTemplate DataType="{x:Type model:BrowseNodeModel}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" />
+
+                        <Button Grid.Column="1" Content="Navigate" Command="{Binding ElementName=MainGrid, Path=DataContext.BrowseNodeCommand}" CommandParameter="{Binding Id}" />
+                    </Grid>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type model:BrowseMarketModel}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="{Binding OptionName}" />
+
+                        <Button Grid.Column="1" Content="Select" Command="{Binding ElementName=MainGrid, Path=DataContext.ValidateCommand}" CommandParameter="{Binding}" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
+
+            <ListBox.ItemsSource>
+                <CompositeCollection>
+                    <CollectionContainer Collection="{Binding Source={StaticResource nodesSource}}" />
+                    <CollectionContainer Collection="{Binding Source={StaticResource marketsSource}}" />
+                </CompositeCollection>
+            </ListBox.ItemsSource>
+        </ListBox>
+
+        <Button Grid.Row="2" Content="Cancel" Command="{Binding CancelCommand}" />
+    </Grid>
+</view:BaseView>
+

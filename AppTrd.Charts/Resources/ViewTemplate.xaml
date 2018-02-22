@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:viewModel="clr-namespace:AppTrd.Charts.ViewModel"
+                    xmlns:view="clr-namespace:AppTrd.Charts.View"
+                    xmlns:baseViewModel="clr-namespace:AppTrd.BaseLib.ViewModel;assembly=AppTrd.BaseLib"
+                    xmlns:baseView="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib">
+
+    <DataTemplate DataType="{x:Type baseViewModel:LoginViewModel}">
+        <baseView:LoginView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModel:MarketSelectorViewModel}">
+        <view:MarketSelectorView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModel:CandleViewModel}">
+        <view:CandleView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type viewModel:DashboardViewModel}">
+        <view:DashboardView />
+    </DataTemplate>
+
+</ResourceDictionary>

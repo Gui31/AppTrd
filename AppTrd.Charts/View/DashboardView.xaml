@@ -1,0 +1,119 @@
+﻿<view:BaseView x:Class="AppTrd.Charts.View.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:common="clr-namespace:AppTrd.BaseLib.Common;assembly=AppTrd.BaseLib"
+             xmlns:control="clr-namespace:AppTrd.Charts.Control"
+             xmlns:view="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Grid Margin="10 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Cash : " />
+                <TextBlock Grid.Column="1" Text="{Binding Account.AvailableCash}" />
+            </Grid>
+
+            <Grid Margin="10 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Margin : " />
+                <TextBlock Grid.Column="1" Text="{Binding Account.Deposit}" />
+            </Grid>
+
+            <Grid Margin="10 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Account PNL : " />
+                <TextBlock Grid.Column="1" Text="{Binding Account.ProfitLoss}" />
+            </Grid>
+
+            <ToggleButton Content="&#x2328;" FontFamily="Segoe UI Symbol" FontSize="16" Width="24" Height="24" 
+                          IsChecked="{Binding IsTradingKeyboardActive, Mode=TwoWay}" Margin="10 5 0 0" Focusable="False"/>
+
+            <Button Content="&#xE109;" FontFamily="Segoe UI Symbol" FontSize="16" Width="24" Height="24" 
+                    Command="{Binding OpenMarketCommand}" Margin="10 5 0 0" Focusable="False"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <ListBox x:Name="PositionsListBox" ItemsSource="{Binding Positions}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0 3 0 0">
+                            <Rectangle Fill="LightGray" Height="1" VerticalAlignment="Bottom" Margin="0 0 0 -1" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="50" />
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="75" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding DealSizeWithDirection, Converter={StaticResource DoubleToPriceConverter}}" Foreground="{Binding DealSizeWithDirection, Converter={StaticResource PnlToBrushConverter}}" TextAlignment="Center" />
+
+                                <TextBlock Grid.Column="1" Text="{Binding OpenLevelText}" TextAlignment="Center" />
+
+                                <TextBlock Grid.Column="2" Text="{Binding StopLevelText}" TextAlignment="Center" />
+
+                                <TextBlock Grid.Column="3" Text="{Binding LimitLevelText}" TextAlignment="Center" />
+
+                                <TextBlock Grid.Column="4" Text="{Binding Pnl, Converter={StaticResource DoubleToPriceConverter}}" Foreground="{Binding Pnl, Converter={StaticResource PnlToBrushConverter}}" TextAlignment="Center" />
+
+                                <Button Grid.Column="6" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.StopToZeroCommand}" CommandParameter="{Binding}">
+                                    <TextBlock Text="&#xE11C;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
+                                </Button>
+
+                                <Button Grid.Column="7" Margin="10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.LimitToZeroCommand}" CommandParameter="{Binding}">
+                                    <TextBlock Text="&#xE118;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
+                                </Button>
+
+                                <Button Grid.Column="8" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.SplitCommand}" CommandParameter="{Binding}">
+                                    <TextBlock Text="&#xE16B;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
+                                </Button>
+
+                                <Button Grid.Column="9" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.CloseCommand}" CommandParameter="{Binding}">
+                                    <TextBlock Text="&#xE0A4;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
+                                </Button>
+
+                                <Button Grid.Column="10" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsItemsControl, Path=DataContext.LockCommand}" CommandParameter="{Binding}">
+                                    <Grid>
+                                        <TextBlock Text="&#x1F512;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" Visibility="{Binding IsLocked, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
+                                        <TextBlock Text="&#x1F513;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" Visibility="{Binding IsLocked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </Grid>
+                                </Button>
+                                
+                                <Button Grid.Column="9" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.OpenGraphCommand}" CommandParameter="{Binding}">
+                                    <TextBlock Text="&#x1f4c8;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</view:BaseView>
+
+
+

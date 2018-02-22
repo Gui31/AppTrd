@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:AppTrd.BaseLib.Converters">
+    
+    <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter"/>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:PnlToBrushConverter x:Key="PnlToBrushConverter" />
+    <converters:DoubleToPriceConverter x:Key="DoubleToPriceConverter" />
+    
+</ResourceDictionary>
