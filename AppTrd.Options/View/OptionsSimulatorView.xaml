@@ -19,44 +19,90 @@
         <StackPanel Grid.Row="0" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <Button Content="Go back" Command="{Binding GoBackCommand}" />
-                <Button Content="Calculate" Command="{Binding UpdateCommand}" />
-                <ToggleButton x:Name="HideOptionsButton" Content="Hide options" />
+                <Button Content="Calculate" Command="{Binding UpdateCommand}" Margin="4 0 0 0" />
+                <ToggleButton x:Name="HideOptionsButton" Content="Hide options" Margin="4 0 0 0" />
+
+                <TextBlock Text="Price range : " Margin="4 0 0 0" />
+                <TextBox Text="{Binding MinPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
+                <TextBlock Text=" &#xE2B7; " FontFamily="Segoe UI Symbol" />
+                <TextBox Text="{Binding MaxPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
             </StackPanel>
 
-            <ItemsControl ItemsSource="{Binding Options}" Visibility="{Binding ElementName=HideOptionsButton, Path=IsChecked, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Name}" />
-                            <ComboBox SelectedItem="{Binding Action, Mode=TwoWay}">
-                                <item:OptionActions>None</item:OptionActions>
-                                <item:OptionActions>Buy</item:OptionActions>
-                                <item:OptionActions>Sell</item:OptionActions>
-                            </ComboBox>
+            <Grid Visibility="{Binding ElementName=HideOptionsButton, Path=IsChecked, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <Border BorderBrush="Black" BorderThickness="0 1" Margin="0 4"/>
 
-                            <TextBlock Text="Prime: "/>
-                            <TextBox Text="{Binding CurrentPrime, Mode=TwoWay}" />
-                            <TextBlock>
-                                <Run Text="(" />
-                                <Run Text="{Binding Prime}" />
-                                <Run Text=")" />
-                            </TextBlock>
+                <Grid Margin="0 8" Grid.IsSharedSizeScope="True">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                            <TextBlock Text="Quantity: "/>
-                            <TextBox Text="{Binding Quantity, Mode=TwoWay}" />
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="ActionColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="PrimeColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="QuantityColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="SpreadColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="VolatilityColumn" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="InterestColumn" />
+                        </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Spread: "/>
-                            <TextBox Text="{Binding Spread, Mode=TwoWay}"/>
+                        <TextBlock Text="Name" Grid.Column="0" FontWeight="Bold" />
+                        <TextBlock Text="Action" Grid.Column="1" FontWeight="Bold" Margin="4 0 0 0" />
+                        <TextBlock Text="Prime" Grid.Column="2" FontWeight="Bold" Margin="4 0 0 0" />
+                        <TextBlock Text="Quantity" Grid.Column="3" FontWeight="Bold" Margin="4 0 0 0" />
+                        <TextBlock Text="Spread" Grid.Column="4" FontWeight="Bold" Margin="4 0 0 0" />
+                        <TextBlock Text="Volatility (%)" Grid.Column="5" FontWeight="Bold" Margin="4 0 0 0" />
+                        <TextBlock Text="Interest rate (%)" Grid.Column="6" FontWeight="Bold" Margin="4 0 0 0" />
+                    </Grid>
 
-                            <TextBlock Text="Volatility: "/>
-                            <TextBox Text="{Binding Volatility, Mode=TwoWay}"/>
+                    <ItemsControl ItemsSource="{Binding Options}" Grid.Row="1">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0 0 0 4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="ActionColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PrimeColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="QuantityColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="SpreadColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="VolatilityColumn" />
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="InterestColumn" />
+                                    </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Interest rate: "/>
-                            <TextBox Text="{Binding InterestRate, Mode=TwoWay}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                                    <TextBlock Text="{Binding Name}" Grid.Column="0" />
+
+                                    <ComboBox SelectedItem="{Binding Action, Mode=TwoWay}" Grid.Column="1" Margin="4 0 0 0">
+                                        <item:OptionActions>None</item:OptionActions>
+                                        <item:OptionActions>Buy</item:OptionActions>
+                                        <item:OptionActions>Sell</item:OptionActions>
+                                    </ComboBox>
+
+                                    <Grid Grid.Column="2" Margin="4 0 0 0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="PrimeBoxColumn" />
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="PrimeDefaultColumn" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Text="{Binding CurrentPrime, Mode=TwoWay}" Grid.Column="0" />
+
+                                        <TextBlock Text="{Binding Prime, StringFormat=({0})}" Grid.Column="1" />
+                                    </Grid>
+
+                                    <TextBox Text="{Binding Quantity, Mode=TwoWay}" Grid.Column="3" Margin="4 0 0 0" />
+
+                                    <TextBox Text="{Binding Spread, Mode=TwoWay, StringFormat=0.#}" Grid.Column="4" Margin="4 0 0 0"/>
+
+                                    <TextBox Text="{Binding Volatility, Mode=TwoWay}" Grid.Column="5" Margin="4 0 0 0" />
+
+                                    <TextBox Text="{Binding InterestRate, Mode=TwoWay}" Grid.Column="6" Margin="4 0 0 0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </Grid>
         </StackPanel>
 
         <control:OptionsSimulationControl Grid.Row="1" 

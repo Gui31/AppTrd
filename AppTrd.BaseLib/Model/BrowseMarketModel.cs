@@ -82,17 +82,7 @@ namespace AppTrd.BaseLib.Model
                 if (InstrumentType.StartsWith("OPT") == false)
                     return InstrumentName;
 
-                var infos = InstrumentName.Split(' ');
-
-                var dir = infos[infos.Length - 1];
-                var strike = double.Parse(infos[infos.Length - 2]);
-
-                var mid = (bid + offer) / 2;
-
-                var diff = dir == "CALL" ? Math.Max(netChange.Value - strike, 0) - mid : Math.Min(netChange.Value - strike, 0) + mid ;
-                var th = dir == "CALL" ? netChange.Value + diff : netChange.Value - diff;
-
-                return $"{InstrumentName} (price: {netChange:0.0}) (mid: {mid:0.0}) (dT: {diff:0.0}) (buy: {th})";
+                return $"{InstrumentName} (price: {netChange:0.0}) (prime: {bid}|{offer})";
             }
         }
     }

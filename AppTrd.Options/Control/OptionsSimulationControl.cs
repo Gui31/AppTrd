@@ -279,7 +279,7 @@ namespace AppTrd.Options.Control
                         if (option.Action == OptionActions.Buy)
                         {
                             value -= option.CurrentPrime * option.Quantity;
-                            var prime = BlackScholesHelper.Prime(isCall, price, option.Strike, option.InterestRate, option.Volatility, timeToExpiry);
+                            var prime = BlackScholesHelper.Prime(isCall, price, option.Strike, option.InterestRate / 100, option.Volatility / 100, timeToExpiry);
                             value += Math.Max(0, prime * option.Quantity);
 
                             value -= option.Spread;
@@ -288,7 +288,7 @@ namespace AppTrd.Options.Control
                         if (option.Action == OptionActions.Sell)
                         {
                             value += option.CurrentPrime * option.Quantity;
-                            var prime = BlackScholesHelper.Prime(isCall, price, option.Strike, option.InterestRate, option.Volatility, timeToExpiry);
+                            var prime = BlackScholesHelper.Prime(isCall, price, option.Strike, option.InterestRate / 100, option.Volatility / 100, timeToExpiry);
                             value -= Math.Max(0, prime * option.Quantity);
 
                             value -= option.Spread;

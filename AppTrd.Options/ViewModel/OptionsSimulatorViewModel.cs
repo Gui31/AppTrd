@@ -54,6 +54,9 @@ namespace AppTrd.Options.ViewModel
                 if (_minPrice == value)
                     return;
 
+                if (value < 0)
+                    throw new Exception();
+
                 _minPrice = value;
                 RaisePropertyChanged(() => MinPrice);
             }
@@ -67,6 +70,9 @@ namespace AppTrd.Options.ViewModel
             {
                 if (_maxPrice == value)
                     return;
+
+                if (value <= MinPrice)
+                    throw new Exception();
 
                 _maxPrice = value;
                 RaisePropertyChanged(() => MaxPrice);
@@ -141,8 +147,8 @@ namespace AppTrd.Options.ViewModel
             CurrentPrice = Options.Average(o => o.CurrentPrice);
 
             EndDate = Options.Min(o => o.Expiry);
-            MinPrice = Math.Min(CurrentPrice, Options.Min(p => p.Strike)) * 0.95;
-            MaxPrice = Math.Max(CurrentPrice, Options.Max(o => o.Strike)) * 1.05;
+            MinPrice = Math.Round(Math.Min(CurrentPrice, Options.Min(p => p.Strike)) * 0.95);
+            MaxPrice = Math.Round(Math.Max(CurrentPrice, Options.Max(o => o.Strike)) * 1.05);
 
             Update();
         }

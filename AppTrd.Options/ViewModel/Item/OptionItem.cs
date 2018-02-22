@@ -196,7 +196,7 @@ namespace AppTrd.Options.ViewModel.Item
         public OptionItem(MarketDetailsResponse marketDetails)
         {
             Quantity = 1;
-            Name = marketDetails.instrument.name;
+            Name = $"{marketDetails.instrument.name} ({marketDetails.instrument.expiry})";
 
             var infos = marketDetails.instrument.name.Split(' ');
 
@@ -222,6 +222,9 @@ namespace AppTrd.Options.ViewModel.Item
             var time = Expiry.Subtract(DateTime.Now).TotalDays / 365;
 
             Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, Prime);
+
+            InterestRate = Math.Round(InterestRate * 100, 2);
+            Volatility = Math.Round(Volatility * 100, 2);
         }
     }
 }

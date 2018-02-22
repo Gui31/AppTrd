@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using AppTrd.BaseLib.Common;
@@ -16,6 +17,7 @@ namespace AppTrd.Options.ViewModel
     public class OptionsSelectorViewModel : BaseViewModel
     {
         private readonly ITradingService _tradingService;
+        private string _marketId;
 
         private readonly Stack<string> _browseHistory = new Stack<string>();
 
@@ -49,13 +51,15 @@ namespace AppTrd.Options.ViewModel
             BrowseBackCommand = new RelayCommand(BrowseBack);
             AddMarketCommand = new RelayCommand<BrowseMarketModel>(AddMarket);
             RemoveMarketCommand = new RelayCommand<BrowseMarketModel>(RemoveMarket);
-            ValidateCommand = new RelayCommand(Validate);
+            ValidateCommand = new RelayCommand(Validate, CanValidate);
         }
 
         public override void Init()
         {
             SelectedMarkets.Clear();
             _browseHistory.Clear();
+
+            _marketId = null;
 
             Browse = BrowseRoot();
         }
@@ -89,12 +93,30 @@ namespace AppTrd.Options.ViewModel
 
         private void AddMarket(BrowseMarketModel item)
         {
+            var detail = _tradingService.GetMarketDetails(item.Epic);
+
+            if (_marketId == null)
+                _marketId = detail.instrument.marketId;
+
+            if (_marketId != detail.instrument.marketId)
+            {
+                MessageBox.Show($"Add option based on {_marketId} market.", "Wrong market");
+                return;
+            }
+
             SelectedMarkets.Add(item);
+
+            ValidateCommand.RaiseCanExecuteChanged();
         }
 
         private void RemoveMarket(BrowseMarketModel item)
         {
             SelectedMarkets.Remove(item);
+
+            if (SelectedMarkets.Count == 0)
+                _marketId = null;
+
+            ValidateCommand.RaiseCanExecuteChanged();
         }
 
         private void Validate()
@@ -102,6 +124,10 @@ namespace AppTrd.Options.ViewModel
             var mainViewModel = ServiceLocator.Current.GetInstance<MainViewModel>();
 
             mainViewModel.SimulateOptions();
+        }
+        private bool CanValidate()
+        {
+            return SelectedMarkets != null && SelectedMarkets.Count > 0;
         }
     }
 }
