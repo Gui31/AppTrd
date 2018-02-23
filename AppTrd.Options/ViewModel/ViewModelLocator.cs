@@ -21,6 +21,7 @@ namespace AppTrd.Options.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<ITradingService, TradingService>();
+            SimpleIoc.Default.Register<ISettingsService, SettingsService>();
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<BaseMainViewModel>(() => ServiceLocator.Current.GetInstance<MainViewModel>());

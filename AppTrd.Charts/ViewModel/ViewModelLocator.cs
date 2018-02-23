@@ -14,6 +14,7 @@ namespace AppTrd.Charts.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<ITradingService, TradingService>();
+            SimpleIoc.Default.Register<ISettingsService, SettingsService>();
 
             SimpleIoc.Default.Register<BaseMainViewModel, MainViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AppTrd.BaseLib.Model;
 using AppTrd.BaseLib.Service;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
 
 namespace AppTrd.BaseLib.ViewModel
@@ -13,6 +14,7 @@ namespace AppTrd.BaseLib.ViewModel
     {
         private readonly BaseMainViewModel _mainViewModel;
         private readonly ITradingService _tradingService;
+        private readonly ISettingsService _settingsService;
         private string _username;
         private List<AccountModel> _accounts;
         private AccountModel _selectedAccount;
@@ -146,12 +148,13 @@ namespace AppTrd.BaseLib.ViewModel
         public RelayCommand<string> LoginCommand { get; private set; }
         public RelayCommand ConnectCommand { get; private set; }
 
-        public LoginViewModel(BaseMainViewModel mainViewModel, ITradingService tradingService)
+        public LoginViewModel(BaseMainViewModel mainViewModel, ITradingService tradingService, ISettingsService settingsService)
         {
-            LoadRegistry();
-
             _mainViewModel = mainViewModel;
             _tradingService = tradingService;
+            _settingsService = settingsService;
+
+            LoadSettings();
 
             LoginCommand = new RelayCommand<string>(Login, p => !IsLogged || (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(p) && string.IsNullOrEmpty(ApiKey)));
             ConnectCommand = new RelayCommand(Connect, () => _tradingService.IsLogged && SelectedAccount != null);
@@ -171,7 +174,7 @@ namespace AppTrd.BaseLib.ViewModel
                 return;
             }
 
-            SaveRegistry(Username, ApiKey, UseDemo, SaveLogin);
+            SaveSettings(Username, ApiKey, UseDemo, SaveLogin);
 
             IsLogged = _tradingService.IsLogged;
             Accounts = _tradingService.Accounts;
@@ -209,57 +212,39 @@ namespace AppTrd.BaseLib.ViewModel
             IsBusy = false;
         }
 
-        private const string LoginKey = "Software\\AppTrd\\Login";
-
-        private void LoadRegistry()
+        private void LoadSettings()
         {
-            var loginKey = Registry.CurrentUser.OpenSubKey(LoginKey);
+            var settings = _settingsService.GetSettings();
 
-            if (loginKey != null)
+            if (settings.LoginInformations != null)
             {
-                try
-                {
-                    _username = Convert.ToString(loginKey.GetValue("Username"));
-                    _apiKey = Convert.ToString(loginKey.GetValue("ApiKey"));
-                    _useDemo = Convert.ToBoolean(loginKey.GetValue("UseDemo"));
-                    _saveLogin = Convert.ToBoolean(loginKey.GetValue("SaveLogin"));
-                }
-                catch (Exception)
-                {
-                    Registry.CurrentUser.DeleteSubKey(LoginKey);
-                }
+                _username = settings.LoginInformations.Username;
+                _apiKey = settings.LoginInformations.ApiKey;
+                _useDemo = settings.LoginInformations.UseDemo;
+                _saveLogin = settings.LoginInformations.SaveLogin;
             }
         }
 
-        private void SaveRegistry(string username, string apiKey, bool useDemo, bool saveLogin)
+        private void SaveSettings(string username, string apiKey, bool useDemo, bool saveLogin)
         {
-            try
+            var settings = _settingsService.GetSettings();
+
+            if (saveLogin)
             {
-                Registry.CurrentUser.DeleteSubKey(LoginKey);
+                settings.LoginInformations = new LoginInformations
+                {
+                    Username = username,
+                    ApiKey = apiKey,
+                    UseDemo = useDemo,
+                    SaveLogin = saveLogin
+                };
             }
-            catch (Exception)
+            else
             {
+                settings.LoginInformations = null;
             }
 
-            if (saveLogin == false)
-                return;
-
-            var loginKey = Registry.CurrentUser.OpenSubKey(LoginKey);
-
-            if (loginKey == null)
-                loginKey = Registry.CurrentUser.CreateSubKey(LoginKey);
-
-            try
-            {
-                loginKey.SetValue("Username", username, RegistryValueKind.String);
-                loginKey.SetValue("ApiKey", apiKey, RegistryValueKind.String);
-                loginKey.SetValue("UseDemo", useDemo, RegistryValueKind.DWord);
-                loginKey.SetValue("SaveLogin", saveLogin, RegistryValueKind.DWord);
-            }
-            catch (Exception)
-            {
-                Registry.CurrentUser.DeleteSubKey(LoginKey);
-            }
+            _settingsService.SaveSettings();
         }
     }
 }

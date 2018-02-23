@@ -121,9 +121,11 @@
     <Compile Include="Receiver\ICandleReceiver.cs" />
     <Compile Include="Receiver\ITickReceiver.cs" />
     <Compile Include="Service\ChartPeriods.cs" />
+    <Compile Include="Service\Impl\SettingsService.cs" />
     <Compile Include="Service\Impl\TradingService.cs" />
     <Compile Include="Service\Impl\TradingService.Instrument.cs" />
     <Compile Include="Service\Impl\TradingService.PositionAndOrder.cs" />
+    <Compile Include="Service\ISettingsService.cs" />
     <Compile Include="Service\ITradingService.cs" />
     <Compile Include="Service\Periods.cs" />
     <Compile Include="Service\SprintMarketsPeriods.cs" />
