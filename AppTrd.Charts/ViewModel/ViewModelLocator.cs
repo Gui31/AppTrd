@@ -18,6 +18,7 @@ namespace AppTrd.Charts.ViewModel
 
             SimpleIoc.Default.Register<BaseMainViewModel, MainViewModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<DashboardViewModel>();
             SimpleIoc.Default.Register<MarketSelectorViewModel>();
         }

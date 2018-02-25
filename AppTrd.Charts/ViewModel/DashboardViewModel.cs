@@ -64,6 +64,7 @@ namespace AppTrd.Charts.ViewModel
         }
 
         public RelayCommand OpenMarketCommand { get; }
+        public RelayCommand OpenSettingsCommand { get; }
         public RelayCommand<PositionModel> StopToZeroCommand { get; }
         public RelayCommand<PositionModel> LimitToZeroCommand { get; }
         public RelayCommand<PositionModel> SplitCommand { get; }
@@ -77,6 +78,7 @@ namespace AppTrd.Charts.ViewModel
             _tradingService = tradingService;
 
             OpenMarketCommand = new RelayCommand(OpenMarket);
+            OpenSettingsCommand = new RelayCommand(OpenSettings);
 
             StopToZeroCommand = new RelayCommand<PositionModel>(StopToZero);
             LimitToZeroCommand = new RelayCommand<PositionModel>(LimitToZero);
@@ -120,6 +122,11 @@ namespace AppTrd.Charts.ViewModel
         private void OpenMarket()
         {
             _mainViewModel.SelectMarket();
+        }
+
+        private void OpenSettings()
+        {
+            _mainViewModel.DisplaySettings();
         }
 
         private void StopToZero(PositionModel position)

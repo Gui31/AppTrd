@@ -21,4 +21,8 @@
         <view:DashboardView />
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
+        <view:SettingsView />
+    </DataTemplate>
+
 </ResourceDictionary>

@@ -101,6 +101,7 @@
     <Compile Include="Messages\ConnectionFailedMessage.cs" />
     <Compile Include="Messages\PositionAddedMessage.cs" />
     <Compile Include="Messages\PositionDeletedMessage.cs" />
+    <Compile Include="Messages\SettingsChangedMessage.cs" />
     <Compile Include="Model\AccountModel.cs" />
     <Compile Include="Model\AffectedDealModel.cs" />
     <Compile Include="Model\BrowseMarketModel.cs" />

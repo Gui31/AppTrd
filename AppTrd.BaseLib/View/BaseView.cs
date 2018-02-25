@@ -17,6 +17,13 @@ namespace AppTrd.BaseLib.View
 
             if (vm != null)
                 vm.Init();
+
+            OnInit();
+        }
+
+        protected virtual void OnInit()
+        {
+
         }
     }
 }

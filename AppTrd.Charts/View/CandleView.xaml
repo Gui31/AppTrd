@@ -13,7 +13,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0 0 0 4">
             <Grid Margin="10 5 0 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -94,6 +94,8 @@
 
             <Rectangle Grid.Column="0" Width="1" Fill="Black" HorizontalAlignment="Right" SnapsToDevicePixels="True" />
         </Grid>
+        
+        <Rectangle Grid.Row="1" Height="1" Fill="Black" VerticalAlignment="Top" SnapsToDevicePixels="True" />
     </Grid>
 </view:BaseView>
 

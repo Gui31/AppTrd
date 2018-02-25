@@ -20,7 +20,9 @@ namespace AppTrd.Charts.ViewModel
     {
         private readonly MainViewModel _mainViewModel;
         private readonly ITradingService _tradingService;
+        private readonly ISettingsService _settingsService;
         private MarketDetailsResponse _marketDetails;
+        private KeyboardSettings _keyboardSettings;
         private string _currency;
         private string _marketEpic;
 
@@ -156,6 +158,7 @@ namespace AppTrd.Charts.ViewModel
         {
             _mainViewModel = mainViewModel;
             _tradingService = ServiceLocator.Current.GetInstance<ITradingService>();
+            _settingsService = ServiceLocator.Current.GetInstance<ISettingsService>();
 
             _marketEpic = epic;
 
@@ -164,6 +167,8 @@ namespace AppTrd.Charts.ViewModel
 
         public override void Init()
         {
+            _keyboardSettings = _settingsService.GetSettings().KeyboardSettings;
+
             Account = _tradingService.CurrentAccount;
 
             _marketDetails = _tradingService.GetMarketDetails(_marketEpic);
@@ -187,20 +192,29 @@ namespace AppTrd.Charts.ViewModel
 
             Messenger.Default.Register<PositionAddedMessage>(this, _marketEpic, PositionAddedMessageReceived);
             Messenger.Default.Register<PositionDeletedMessage>(this, _marketEpic, PositionDeletedMessageReceived);
+            Messenger.Default.Register<SettingsChangedMessage>(this, SettingsUpdated);
+        }
+
+        private void SettingsUpdated(SettingsChangedMessage message)
+        {
+            _keyboardSettings = _settingsService.GetSettings().KeyboardSettings;
         }
 
         private void KeyPress(Key key)
         {
-            if (key == Key.Escape)
+            if (_keyboardSettings == null)
+                return;
+
+            if (_keyboardSettings.CloseAllKey != null && key == _keyboardSettings.CloseAllKey.Key)
                 CloseAllPosition();
 
             if (IsTradingKeyboardActive == false)
                 return;
 
-            if (key == Key.Z)
+            if (_keyboardSettings.BuyKey != null && key == _keyboardSettings.BuyKey.Key)
                 _tradingService.CreateOrder("BUY", _marketEpic, _currency, Size, null, null, null, false);
 
-            if (key == Key.S)
+            if (_keyboardSettings.SellKey != null && key == _keyboardSettings.SellKey.Key)
                 _tradingService.CreateOrder("SELL", _marketEpic, _currency, Size, null, null, null, false);
         }
 

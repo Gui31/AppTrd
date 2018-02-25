@@ -25,10 +25,10 @@
             </Grid.RowDefinitions>
 
             <TextBlock Text="Username" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding Username}" Grid.Row="0" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+            <TextBox x:Name="UsernameTextBox" Text="{Binding Username}" Grid.Row="0" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
 
             <TextBlock Text="Api Key" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
-            <TextBox Text="{Binding ApiKey}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
+            <TextBox x:Name="ApiKeyTextBox" Text="{Binding ApiKey}" Grid.Row="1" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
 
             <TextBlock Text="Password" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
             <PasswordBox x:Name="LoginPasswordBox" Grid.Row="2" Grid.Column="1" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
@@ -38,7 +38,7 @@
             <CheckBox Content="Save login (Password will not be saved)" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" IsChecked="{Binding SaveLogin, Mode=TwoWay}" IsEnabled="{Binding IsLogged, Converter={StaticResource InvertBooleanConverter}}" VerticalAlignment="Center" />
 
             <TextBlock Text="Account" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-            <ComboBox Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}"  IsEnabled="{Binding IsLogged}" VerticalAlignment="Center">
+            <ComboBox x:Name="AccountComboBox" Grid.Row="5" Grid.Column="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount}" IsEnabled="{Binding IsLogged}" VerticalAlignment="Center">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding AccountName}" />

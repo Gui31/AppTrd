@@ -24,6 +24,11 @@ namespace AppTrd.Charts.ViewModel
             CurrentViewModel = ServiceLocator.Current.GetInstance<MarketSelectorViewModel>();
         }
 
+        public void DisplaySettings()
+        {
+            CurrentViewModel = ServiceLocator.Current.GetInstance<SettingsViewModel>();
+        }
+
         public void OpenMarket(string epic)
         {
             var window = new ChildWindow();

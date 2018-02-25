@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using AppTrd.BaseLib.Messages;
 using AppTrd.BaseLib.Model;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace AppTrd.BaseLib.Service.Impl
 {
@@ -64,6 +66,7 @@ namespace AppTrd.BaseLib.Service.Impl
                         {
                             _xmlSerializer.Serialize(stream, _settings);
 
+                            Messenger.Default.Send(new SettingsChangedMessage());
                         }
                     }
                     catch (Exception)
