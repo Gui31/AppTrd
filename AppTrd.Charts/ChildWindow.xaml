@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AppTrd.Charts"
         mc:Ignorable="d"
         x:Name="MyWindow"
-        Title="ChildWindow" Height="300" Width="300">
+        Title="{Binding Title}" Height="300" Width="300">
     <Grid>
         <ContentPresenter Content="{Binding ElementName=MyWindow, Path=DataContext}" />
     </Grid>

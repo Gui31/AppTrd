@@ -47,6 +47,8 @@ namespace AppTrd.Options.ViewModel
         {
             _tradingService = tradingService;
 
+            Title = "Select options";
+
             BrowseNodeCommand = new RelayCommand<string>(BrowseNode);
             BrowseBackCommand = new RelayCommand(BrowseBack);
             AddMarketCommand = new RelayCommand<BrowseMarketModel>(AddMarket);

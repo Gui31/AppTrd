@@ -66,6 +66,8 @@ namespace AppTrd.Charts.ViewModel
             _settingsService = settingsService;
             _mainViewModel = mainViewModel as MainViewModel;
 
+            Title = "Settings";
+
             CancelCommand = new RelayCommand(Cancel);
             ValidateCommand = new RelayCommand(Validate);
         }

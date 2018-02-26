@@ -77,6 +77,8 @@ namespace AppTrd.Charts.ViewModel
             _mainViewModel = mainViewModel as MainViewModel;
             _tradingService = tradingService;
 
+            Title = "Dashboard";
+
             OpenMarketCommand = new RelayCommand(OpenMarket);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
 

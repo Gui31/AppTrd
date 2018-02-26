@@ -114,6 +114,8 @@ namespace AppTrd.Options.ViewModel
         {
             _tradingService = tradingService;
 
+            Title = "Options simulation";
+
             GoBackCommand = new RelayCommand(GoBack);
             UpdateCommand = new RelayCommand(Update);
         }

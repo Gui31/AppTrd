@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AppTrd.Charts"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="{Binding CurrentViewModel.Title}" Height="350" Width="525"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Grid>
         <ContentPresenter Content="{Binding CurrentViewModel}" />

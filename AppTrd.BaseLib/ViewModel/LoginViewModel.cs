@@ -154,6 +154,8 @@ namespace AppTrd.BaseLib.ViewModel
             _tradingService = tradingService;
             _settingsService = settingsService;
 
+            Title = "Login";
+
             LoadSettings();
 
             LoginCommand = new RelayCommand<string>(Login, p => !IsLogged || (!string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(p) && string.IsNullOrEmpty(ApiKey)));

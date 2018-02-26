@@ -45,6 +45,8 @@ namespace AppTrd.Charts.ViewModel
             BrowseBackCommand = new RelayCommand(BrowseBack);
             CancelCommand = new RelayCommand(Cancel);
             ValidateCommand = new RelayCommand<BrowseMarketModel>(Validate);
+
+            Title = "Select market";
         }
 
         public override void Init()

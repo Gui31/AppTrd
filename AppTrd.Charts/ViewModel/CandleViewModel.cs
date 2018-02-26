@@ -176,6 +176,8 @@ namespace AppTrd.Charts.ViewModel
             DoublePlacesFactor = _marketDetails.snapshot.doublePlacesFactor;
             ScalingFactor = _marketDetails.snapshot.scalingFactor;
 
+            Title = _marketDetails.instrument.name;
+
             if (_marketDetails.dealingRules.minDealSize.value != null)
                 Size = (double)_marketDetails.dealingRules.minDealSize.value.Value;
             else
