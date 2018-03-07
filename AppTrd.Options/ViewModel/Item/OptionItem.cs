@@ -25,6 +25,9 @@ namespace AppTrd.Options.ViewModel.Item
 
     public class OptionItem : ViewModelBase
     {
+        private double _bid;
+        private double _ask;
+
         private string _name;
         public string Name
         {
@@ -148,6 +151,12 @@ namespace AppTrd.Options.ViewModel.Item
 
                 _action = value;
                 RaisePropertyChanged(() => Action);
+
+                if (_action == OptionActions.Buy)
+                    CurrentPrime = _ask;
+
+                if (_action == OptionActions.Sell)
+                    CurrentPrime = _bid;
             }
         }
 
@@ -208,12 +217,12 @@ namespace AppTrd.Options.ViewModel.Item
 
             Expiry = Convert.ToDateTime(marketDetails.instrument.expiryDetails.lastDealingDate, CultureInfo.GetCultureInfo("fr-FR"));
 
-            var bid = Convert.ToDouble(marketDetails.snapshot.bid);
-            var ask = Convert.ToDouble(marketDetails.snapshot.offer);
+            _bid = Convert.ToDouble(marketDetails.snapshot.bid);
+            _ask = Convert.ToDouble(marketDetails.snapshot.offer);
 
-            Prime = (bid + ask) / 2;
+            Prime = (_bid + _ask) / 2;
             CurrentPrime = Prime;
-            Spread = ask - bid;
+            Spread = _ask - _bid;
 
             InterestRate = EuriborHelper.GetInterestRate(Expiry.Subtract(DateTime.Now));
 
