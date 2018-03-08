@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Windows;
 using dto.endpoint.marketdetails.v2;
 using dto.endpoint.positions.close.v1;
 using dto.endpoint.positions.create.otc.v2;
@@ -78,6 +79,13 @@ namespace AppTrd.BaseLib.Service.Impl
             Positions = new List<PositionModel>();
             Orders = new List<OrderModel>();
             CandleReceivers = new List<CandleReceiver>();
+
+            Application.Current.Exit += Current_Exit;
+        }
+
+        private void Current_Exit(object sender, ExitEventArgs e)
+        {
+            this.Dispose();
         }
 
         public bool Login(string username, string password, string apiKey, bool useDemo)
