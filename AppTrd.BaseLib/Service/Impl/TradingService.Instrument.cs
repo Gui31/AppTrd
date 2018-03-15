@@ -251,11 +251,27 @@ namespace AppTrd.BaseLib.Service.Impl
 
         public CandleReceiver GetCandleReceiver(string epic, Periods period)
         {
-            var receiver = CandleReceivers.FirstOrDefault(c => c.Epic == epic && c.Period == period);
+            var receiver = CandleReceivers.OfType<CandleDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.Period == period);
 
             if (receiver == null)
             {
-                receiver = new CandleReceiver(epic, period);
+                receiver = new CandleDataReceiver(epic, period);
+
+                CandleReceivers.Add(receiver);
+
+                _hasNewReceiver = true;
+            }
+
+            return receiver;
+        }
+
+        public CandleReceiver GetCandleReceiver(string epic, int ticksCount)
+        {
+            var receiver = CandleReceivers.OfType<TicksDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.TicksCount == ticksCount);
+
+            if (receiver == null)
+            {
+                receiver = new TicksDataReceiver(epic, ticksCount);
 
                 CandleReceivers.Add(receiver);
 
@@ -279,12 +295,19 @@ namespace AppTrd.BaseLib.Service.Impl
                 _candleMultiSubKey = null;
             }
 
-            var infos = CandleReceivers.Select(c => new ChartCandleInfo(c.Epic, (ChartScale)c.Period)).ToArray();
+            var candleInfos = CandleReceivers.OfType<CandleDataReceiver>().Select(c => new ChartCandleInfo(c.Epic, (ChartScale)c.Period)).ToArray();
 
-            if (infos.Length == 0)
-                return;
+            if (candleInfos.Length > 0)
+            {
+                _candleMultiSubKey = _igStreamApiClient.SubscribeToChartCandleData(candleInfos, _candleMultiSub);
+            }
 
-            _candleMultiSubKey = _igStreamApiClient.SubscribeToChartCandleData(infos, _candleMultiSub);
+            var tickInfos = CandleReceivers.OfType<TicksDataReceiver>().Select(c => c.Epic).Distinct().ToArray();
+
+            if (tickInfos.Length > 0)
+            {
+                _candleMultiSubKey = _igStreamApiClient.SubscribeToChartTicks(tickInfos, _tickMultiSub);
+            }
 
             _hasNewReceiver = false;
         }

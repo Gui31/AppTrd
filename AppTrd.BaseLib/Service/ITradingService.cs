@@ -40,6 +40,7 @@ namespace AppTrd.BaseLib.Service
         void UpdateOrder(PositionModel position, double? stopLevel, double? limitLevel);
 
         CandleReceiver GetCandleReceiver(string epic, Periods period);
+        CandleReceiver GetCandleReceiver(string epic, int ticksCount);
         void SubscribeToChartCandle();
 
         SubscribedTableKey SubscribeToChartTick(string epic, ChartTickSubscription chartTickSubscription);

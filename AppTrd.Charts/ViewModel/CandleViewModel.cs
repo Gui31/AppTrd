@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using dto.endpoint.marketdetails.v2;
 using GalaSoft.MvvmLight.Messaging;
 using AppTrd.BaseLib.Common;
+using AppTrd.BaseLib.Listener;
 using AppTrd.BaseLib.ViewModel;
 using AppTrd.BaseLib.Messages;
 using AppTrd.BaseLib.Model;
@@ -183,7 +184,11 @@ namespace AppTrd.Charts.ViewModel
             else
                 Size = 1;
 
-            OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute);
+            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute);
+            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
+            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneHour);
+
+            OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21);
             FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
             OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneHour);
 

@@ -71,6 +71,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
                                 <TextBlock Grid.Column="0" Text="{Binding DealSizeWithDirection, Converter={StaticResource DoubleToPriceConverter}}" Foreground="{Binding DealSizeWithDirection, Converter={StaticResource PnlToBrushConverter}}" TextAlignment="Center" />
@@ -106,7 +107,7 @@
                                     </Grid>
                                 </Button>
                                 
-                                <Button Grid.Column="9" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.OpenGraphCommand}" CommandParameter="{Binding}">
+                                <Button Grid.Column="11" Margin="0 0 10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.OpenGraphCommand}" CommandParameter="{Binding}">
                                     <TextBlock Text="&#x1f4c8;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
                                 </Button>
                             </Grid>

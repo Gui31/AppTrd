@@ -15,17 +15,17 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace AppTrd.BaseLib.Receiver
 {
-    public class CandleReceiver : BaseViewModel, ICandleReceiver
+    public abstract class CandleReceiver : BaseViewModel
     {
-        private ChartCandleSubscription _chartCandleSubscription;
-        private SubscribedTableKey _subscribedTableKey;
-
         private CandleData _currentCandle;
         public CandleData CurrentCandle
         {
             get { return _currentCandle; }
             set
             {
+                if (_currentCandle != null)
+                    CandleClose?.Invoke(this, _currentCandle);
+
                 if (_currentCandle == value)
                     return;
 
@@ -51,67 +51,15 @@ namespace AppTrd.BaseLib.Receiver
             }
         }
 
-        public Periods Period { get; }
-
         public string Epic { get; }
 
-        public CandleReceiver(string epic, Periods period)
+        public event EventHandler<CandleData> CandleClose;
+
+        internal CandleReceiver(string epic)
         {
-            Period = period;
             Epic = epic;
 
             Candles = new ObservableCollection<CandleData>();
-
-            LoadHistory();
-        }
-
-        public void CandleUpdate(DateTime time, double open, double close, double high, double low, bool end)
-        {
-            if (CurrentCandle == null || time != CurrentCandle.Time)
-            {
-                CurrentCandle = new CandleData
-                {
-                    Time = time,
-                    Open = open,
-                    Close = close,
-                    High = high,
-                    Low = low
-                };
-            }
-            else
-            {
-                CurrentCandle.Open = open;
-                CurrentCandle.Close = close;
-                CurrentCandle.High = high;
-                CurrentCandle.Low = low;
-            }
-        }
-
-        private void LoadHistory()
-        {
-            var tradingService = ServiceLocator.Current.GetInstance<ITradingService>();
-
-            var prices = tradingService.GetPriceList(Epic, Period, 100);
-
-            foreach (var price in prices.prices)
-            {
-                try
-                {
-                    var candle = new CandleData
-                    {
-                        Time = DateTime.Parse(price.snapshotTime),
-                        Open = (double)(price.openPrice.ask.Value + price.openPrice.bid.Value) / 2,
-                        Close = (double)(price.closePrice.ask.Value + price.closePrice.bid.Value) / 2,
-                        High = (double)(price.highPrice.ask.Value + price.highPrice.bid.Value) / 2,
-                        Low = (double)(price.lowPrice.ask.Value + price.lowPrice.bid.Value) / 2,
-                    };
-
-                    CurrentCandle = candle;
-                }
-                catch (Exception)
-                {
-                }
-            }
         }
     }
 }

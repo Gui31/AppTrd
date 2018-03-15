@@ -51,11 +51,13 @@ namespace AppTrd.BaseLib.Service.Impl
         private SubscribedTableKey _tradeSubscriptionStk;
         private SubscribedTableKey _watchlistL1PricesSubscribedTableKey;
         private SubscribedTableKey _candleMultiSubKey;
+        private SubscribedTableKey _ticksMultiSubKey;
 
         private readonly AccountBalanceSubscription _accountBalanceSub;
         private readonly TradeSubscription _tradeSub;
         private readonly L1PricesSubscription _l1PricesSub;
         private readonly ChartCandleMultiSubscription _candleMultiSub;
+        private readonly ChartTickMultiSubscription _tickMultiSub;
 
         public bool IsLogged { get; private set; }
         public bool IsConnected { get; private set; }
@@ -74,6 +76,7 @@ namespace AppTrd.BaseLib.Service.Impl
             _tradeSub = new TradeSubscription(this);
             _l1PricesSub = new L1PricesSubscription(this);
             _candleMultiSub = new ChartCandleMultiSubscription(this);
+            _tickMultiSub = new ChartTickMultiSubscription(this);
 
             Instruments = new List<InstrumentModel>();
             Positions = new List<PositionModel>();

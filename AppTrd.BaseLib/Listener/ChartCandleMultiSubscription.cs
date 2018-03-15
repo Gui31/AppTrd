@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using Lightstreamer.DotNet.Client;
 using AppTrd.BaseLib.Common;
 using AppTrd.BaseLib.Receiver;
@@ -28,7 +29,7 @@ namespace AppTrd.BaseLib.Listener
         {
             try
             {
-                var receiver = _tradingService.CandleReceivers[itemPos - 1];
+                var receiver = _tradingService.CandleReceivers.OfType<CandleDataReceiver>().Skip(itemPos - 1).FirstOrDefault();
 
                 if (receiver != null)
                 {

@@ -94,6 +94,7 @@
     <Compile Include="Listener\AccountBalanceSubscription.cs" />
     <Compile Include="Listener\ChartCandleMultiSubscription.cs" />
     <Compile Include="Listener\ChartCandleSubscription.cs" />
+    <Compile Include="Listener\ChartTickMultiSubscription.cs" />
     <Compile Include="Listener\ChartTickSubscription.cs" />
     <Compile Include="Listener\L1PricesSubscription.cs" />
     <Compile Include="Listener\TradeSubscription.cs" />
@@ -118,6 +119,8 @@
     <Compile Include="Model\WatchlistMarketModel.cs" />
     <Compile Include="Model\WatchlistModel.cs" />
     <Compile Include="Receiver\CandleData.cs" />
+    <Compile Include="Receiver\TicksDataReceiver.cs" />
+    <Compile Include="Receiver\CandleDataReceiver.cs" />
     <Compile Include="Receiver\CandleReceiver.cs" />
     <Compile Include="Receiver\ICandleReceiver.cs" />
     <Compile Include="Receiver\ITickReceiver.cs" />
