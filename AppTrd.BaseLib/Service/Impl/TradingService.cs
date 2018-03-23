@@ -33,7 +33,7 @@ namespace AppTrd.BaseLib.Service.Impl
             {Periods.ThreeMinutes, "MINUTE_3"},
             {Periods.FiveMinutes, "MINUTE_5"},
             {Periods.TenMinutes, "MINUTE_10"},
-            {Periods.FiftyMinutes, "MINUTE_15"},
+            {Periods.FifteenMinutes, "MINUTE_15"},
             {Periods.ThirtYMinutes, "MINUTE_30"},
             {Periods.OneHour, "HOUR"},
             {Periods.TwoHours, "HOUR_2"},

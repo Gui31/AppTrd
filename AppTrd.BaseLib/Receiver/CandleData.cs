@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using AppTrd.BaseLib.ViewModel;
 
 namespace AppTrd.BaseLib.Receiver
@@ -72,6 +73,62 @@ namespace AppTrd.BaseLib.Receiver
 
                 _high = value;
                 RaisePropertyChanged(() => High);
+            }
+        }
+
+        private double _lastPrice;
+        public double LastPrice
+        {
+            get { return _lastPrice; }
+            set
+            {
+                if (_lastPrice == value)
+                    return;
+
+                _lastPrice = value;
+                RaisePropertyChanged(() => LastPrice);
+            }
+        }
+
+        private bool _hasBidAsk;
+        public bool HasBidAsk
+        {
+            get { return _hasBidAsk; }
+            set
+            {
+                if (_hasBidAsk == value)
+                    return;
+
+                _hasBidAsk = value;
+                RaisePropertyChanged(() => HasBidAsk);
+            }
+        }
+
+        private double _bid;
+        public double Bid
+        {
+            get { return _bid; }
+            set
+            {
+                if (_bid == value)
+                    return;
+
+                _bid = value;
+                RaisePropertyChanged(() => Bid);
+            }
+        }
+
+        private double _ask;
+        public double Ask
+        {
+            get { return _ask; }
+            set
+            {
+                if (_ask == value)
+                    return;
+
+                _ask = value;
+                RaisePropertyChanged(() => Ask);
             }
         }
 

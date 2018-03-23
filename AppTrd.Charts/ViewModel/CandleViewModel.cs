@@ -188,9 +188,13 @@ namespace AppTrd.Charts.ViewModel
             //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
             //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneHour);
 
-            OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21);
-            FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
-            OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneHour);
+            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 0);
+            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
+            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 7);
+
+            OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21, 3, 5);
+            FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
+            OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes, 0);
 
             _tradingService.SubscribeToChartCandle();
 

@@ -226,13 +226,15 @@ namespace AppTrd.Charts.Control
                 RenderCandle(drawingContext, candleData, index++);
             }
 
+            RenderLastPrice(drawingContext, datas.FirstOrDefault());
+
             if (Positions != null)
             {
                 var positions = Positions.ToList();
 
                 foreach (var position in positions)
                 {
-                    RenderPosition(drawingContext, position);
+                    RenderPosition(drawingContext, position, datas.FirstOrDefault());
                 }
             }
         }
@@ -263,7 +265,7 @@ namespace AppTrd.Charts.Control
                 case Periods.TenMinutes:
                     ok = data.Time.Minute == 0;
                     break;
-                case Periods.FiftyMinutes:
+                case Periods.FifteenMinutes:
                     ok = data.Time.Minute == 0;
                     break;
                 case Periods.ThirtYMinutes:
@@ -377,7 +379,7 @@ namespace AppTrd.Charts.Control
             }
         }
 
-        private void RenderPosition(DrawingContext drawingContext, PositionModel position)
+        private void RenderPosition(DrawingContext drawingContext, PositionModel position, CandleData lastCandle)
         {
             var length = DateTime.Now.Subtract(position.CreatedDate).TotalSeconds / _graphContext.CandleDuration * 6;
 
@@ -401,6 +403,12 @@ namespace AppTrd.Charts.Control
 
             var pnl = position.Pnl;
 
+            if (lastCandle.HasBidAsk && position.Direction == PositionModel.Directions.BUY)
+                pnl = (lastCandle.Bid - position.OpenLevel) * position.DealSize * position.ContractSize;
+
+            if (lastCandle.HasBidAsk && position.Direction == PositionModel.Directions.SELL)
+                pnl = (position.OpenLevel - lastCandle.Ask) * position.DealSize * position.ContractSize;
+
             var dir = position.Direction == PositionModel.Directions.BUY ? "↑" : "↓";
 
             var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
@@ -408,6 +416,23 @@ namespace AppTrd.Charts.Control
 
             drawingContext.DrawRectangle(Brushes.Black, null, new Rect(_graphContext.GraphWidth, open - text.Height / 2, text.Width, text.Height));
             drawingContext.DrawText(text, new Point(_graphContext.GraphWidth, open - text.Height / 2));
+        }
+
+        private void RenderLastPrice(DrawingContext drawingContext, CandleData lastCandle)
+        {
+            var y = Math.Round(_graphContext.GraphHeigh - ((lastCandle.LastPrice - _graphContext.Min) / (_graphContext.Max - _graphContext.Min) * _graphContext.GraphHeigh));
+
+            var brush = Brushes.Black;
+
+            var pen = new Pen(brush, 1);
+
+            drawingContext.DrawLine(pen, new Point(0, y), new Point(_graphContext.GraphWidth, y));
+
+            var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+            var text = new FormattedText($"{lastCandle.LastPrice:0.##}", CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, 11, Brushes.White);
+
+            drawingContext.DrawRectangle(Brushes.Black, null, new Rect(_graphContext.GraphWidth, y - text.Height / 2, text.Width, text.Height));
+            drawingContext.DrawText(text, new Point(_graphContext.GraphWidth, y - text.Height / 2));
         }
 
         private Window GetParentWindow(DependencyObject child)

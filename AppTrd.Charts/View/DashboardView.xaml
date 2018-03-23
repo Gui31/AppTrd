@@ -84,11 +84,11 @@
 
                                 <TextBlock Grid.Column="4" Text="{Binding Pnl, Converter={StaticResource DoubleToPriceConverter}}" Foreground="{Binding Pnl, Converter={StaticResource PnlToBrushConverter}}" TextAlignment="Center" />
 
-                                <Button Grid.Column="6" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.StopToZeroCommand}" CommandParameter="{Binding}">
+                                <Button Grid.Column="6" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.StopToZeroCommand}" ToolTip="Stop loose to 0" CommandParameter="{Binding}">
                                     <TextBlock Text="&#xE11C;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
                                 </Button>
 
-                                <Button Grid.Column="7" Margin="10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.LimitToZeroCommand}" CommandParameter="{Binding}">
+                                <Button Grid.Column="7" Margin="10 0" Height="25" Width="25" Command="{Binding ElementName=PositionsListBox, Path=DataContext.LimitToZeroCommand}" ToolTip="Target price to 0" CommandParameter="{Binding}">
                                     <TextBlock Text="&#xE118;" FontSize="16" FontFamily="Segoe UI Symbol" TextAlignment="Center" />
                                 </Button>
 

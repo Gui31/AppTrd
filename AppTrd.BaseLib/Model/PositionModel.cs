@@ -262,10 +262,10 @@ namespace AppTrd.BaseLib.Model
             if (model != null)
             {
                 if (Direction == Directions.BUY && model.Bid.HasValue)
-                    Pnl = (model.Bid.Value - OpenLevel) * this.DealSize * ContractSize;
+                    Pnl = (model.Bid.Value - OpenLevel) * DealSize * ContractSize;
 
                 if (Direction == Directions.SELL && model.Offer.HasValue)
-                    Pnl = (OpenLevel - model.Offer.Value) * this.DealSize * ContractSize;
+                    Pnl = (OpenLevel - model.Offer.Value) * DealSize * ContractSize;
             }
         }
     }

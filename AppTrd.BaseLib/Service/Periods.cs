@@ -9,7 +9,7 @@
         ThreeMinutes = 180, // MINUTE_3
         FiveMinutes = 300, // MINUTE_5
         TenMinutes = 600, // MINUTE_10
-        FiftyMinutes = 900, // MINUTE_15
+        FifteenMinutes = 900, // MINUTE_15
         ThirtYMinutes = 1800, // MINUTE_30
         OneHour = 3600, // HOUR
         TwoHours = 7200, // HOUR_2

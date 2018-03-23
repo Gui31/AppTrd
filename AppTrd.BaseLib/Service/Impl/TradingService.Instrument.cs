@@ -249,13 +249,13 @@ namespace AppTrd.BaseLib.Service.Impl
 
         private bool _hasNewReceiver = false;
 
-        public CandleReceiver GetCandleReceiver(string epic, Periods period)
+        public CandleReceiver GetCandleReceiver(string epic, Periods period, int averageOpen)
         {
-            var receiver = CandleReceivers.OfType<CandleDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.Period == period);
+            var receiver = CandleReceivers.OfType<CandleDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.Period == period && c.AverageOpen == averageOpen);
 
             if (receiver == null)
             {
-                receiver = new CandleDataReceiver(epic, period);
+                receiver = new CandleDataReceiver(epic, period, averageOpen);
 
                 CandleReceivers.Add(receiver);
 
@@ -265,13 +265,13 @@ namespace AppTrd.BaseLib.Service.Impl
             return receiver;
         }
 
-        public CandleReceiver GetCandleReceiver(string epic, int ticksCount)
+        public CandleReceiver GetCandleReceiver(string epic, int ticksCount, int averageOpen, int maxSeconds)
         {
-            var receiver = CandleReceivers.OfType<TicksDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.TicksCount == ticksCount);
+            var receiver = CandleReceivers.OfType<TicksDataReceiver>().FirstOrDefault(c => c.Epic == epic && c.TicksCount == ticksCount && c.AverageOpen == averageOpen && c.MaxSeconds == maxSeconds);
 
             if (receiver == null)
             {
-                receiver = new TicksDataReceiver(epic, ticksCount);
+                receiver = new TicksDataReceiver(epic, ticksCount, averageOpen, maxSeconds);
 
                 CandleReceivers.Add(receiver);
 

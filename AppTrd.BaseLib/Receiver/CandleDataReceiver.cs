@@ -19,10 +19,13 @@ namespace AppTrd.BaseLib.Receiver
     {
         public Periods Period { get; }
 
-        internal CandleDataReceiver(string epic, Periods period)
+        public int AverageOpen { get; }
+
+        internal CandleDataReceiver(string epic, Periods period, int averageOpen)
             : base(epic)
         {
             Period = period;
+            AverageOpen = averageOpen;
 
             Candles = new ObservableCollection<CandleData>();
 
@@ -33,21 +36,29 @@ namespace AppTrd.BaseLib.Receiver
         {
             if (CurrentCandle == null || time != CurrentCandle.Time)
             {
+                if (AverageOpen > 0 && Candles.Count >= AverageOpen)
+                {
+                    var up = CurrentCandle.Close > CurrentCandle.Open;
+
+                    open = Candles.Reverse().Take(AverageOpen).Average(c => (c.Close + (up ? c.Low : c.High)) / 2);
+                }
+
                 CurrentCandle = new CandleData
                 {
                     Time = time,
                     Open = open,
                     Close = close,
                     High = high,
-                    Low = low
+                    Low = low,
+                    LastPrice = close
                 };
             }
             else
             {
-                CurrentCandle.Open = open;
                 CurrentCandle.Close = close;
                 CurrentCandle.High = high;
                 CurrentCandle.Low = low;
+                CurrentCandle.LastPrice = close;
             }
         }
 
@@ -61,16 +72,13 @@ namespace AppTrd.BaseLib.Receiver
             {
                 try
                 {
-                    var candle = new CandleData
-                    {
-                        Time = DateTime.Parse(price.snapshotTime),
-                        Open = (double)(price.openPrice.ask.Value + price.openPrice.bid.Value) / 2,
-                        Close = (double)(price.closePrice.ask.Value + price.closePrice.bid.Value) / 2,
-                        High = (double)(price.highPrice.ask.Value + price.highPrice.bid.Value) / 2,
-                        Low = (double)(price.lowPrice.ask.Value + price.lowPrice.bid.Value) / 2,
-                    };
+                    var time = DateTime.Parse(price.snapshotTime);
+                    var open = (double)(price.openPrice.ask.Value + price.openPrice.bid.Value) / 2;
+                    var close = (double)(price.closePrice.ask.Value + price.closePrice.bid.Value) / 2;
+                    var high = (double)(price.highPrice.ask.Value + price.highPrice.bid.Value) / 2;
+                    var low = (double)(price.lowPrice.ask.Value + price.lowPrice.bid.Value) / 2;
 
-                    CurrentCandle = candle;
+                    CandleUpdate(time, open, close, high, low, true);
                 }
                 catch (Exception)
                 {
