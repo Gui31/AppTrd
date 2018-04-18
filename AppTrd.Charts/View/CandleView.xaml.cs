@@ -1,8 +1,8 @@
 ﻿namespace AppTrd.Charts.View
 {
-    public partial class CandleView
+    public partial class MarketView
     {
-        public CandleView()
+        public MarketView()
         {
             InitializeComponent();
         }

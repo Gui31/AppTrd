@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="AppTrd.Charts.View.Settings.MarketPeriodSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AppTrd.Charts.View.Settings"
+             xmlns:setting="clr-namespace:AppTrd.Charts.Setting"
+             xmlns:service="clr-namespace:AppTrd.BaseLib.Service;assembly=AppTrd.BaseLib"
+             xmlns:control="clr-namespace:AppTrd.Charts.Control"
+             xmlns:settings="clr-namespace:AppTrd.Charts.ViewModel.Settings"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Type=settings:MarketPeriodSettingsViewModel}">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+
+            <control:ParamContentControl Title="Data type">
+                <ComboBox SelectedItem="{Binding Path=Mode}">
+                    <setting:PeriodMode>Time</setting:PeriodMode>
+                    <setting:PeriodMode>Tick</setting:PeriodMode>
+                </ComboBox>
+            </control:ParamContentControl>
+
+            <StackPanel x:Name="TimePanel" Orientation="Vertical" Visibility="{Binding TimeVisibility}">
+                <control:ParamContentControl Title="Time period">
+                    <ComboBox SelectedItem="{Binding TimePeriod}">
+                        <service:ChartPeriods>OneSecond</service:ChartPeriods>
+                        <service:ChartPeriods>OneMinute</service:ChartPeriods>
+                        <service:ChartPeriods>FiveMinutes</service:ChartPeriods>
+                        <service:ChartPeriods>OneHour</service:ChartPeriods>
+                    </ComboBox>
+                </control:ParamContentControl>
+
+                <control:ParamContentControl Title="Average open">
+                    <TextBox Text="{Binding AverageOpen, Mode=TwoWay}" />
+                </control:ParamContentControl>
+            </StackPanel>
+
+            <StackPanel x:Name="TickPanel" Orientation="Vertical" Visibility="{Binding TickVisibility}">
+                <control:ParamContentControl Title="Tick count">
+                    <TextBox Text="{Binding TickCount, Mode=TwoWay}" />
+                </control:ParamContentControl>
+
+                <control:ParamContentControl Title="Average open">
+                    <TextBox Text="{Binding AverageOpen, Mode=TwoWay}" />
+                </control:ParamContentControl>
+
+                <control:ParamContentControl Title="Max seconds">
+                    <TextBox Text="{Binding MaxSeconds, Mode=TwoWay}" />
+                </control:ParamContentControl>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

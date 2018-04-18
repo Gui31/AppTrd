@@ -25,8 +25,7 @@ namespace AppTrd.Options.ViewModel.Item
 
     public class OptionItem : ViewModelBase
     {
-        private double _bid;
-        private double _ask;
+        public string Epic { get;}
 
         private string _name;
         public string Name
@@ -153,10 +152,38 @@ namespace AppTrd.Options.ViewModel.Item
                 RaisePropertyChanged(() => Action);
 
                 if (_action == OptionActions.Buy)
-                    CurrentPrime = _ask;
+                    CurrentPrime = Ask;
 
                 if (_action == OptionActions.Sell)
-                    CurrentPrime = _bid;
+                    CurrentPrime = Bid;
+            }
+        }
+
+        private double _bid;
+        public double Bid
+        {
+            get { return _bid; }
+            set
+            {
+                if (_bid == value)
+                    return;
+
+                _bid = value;
+                RaisePropertyChanged(() => Bid);
+            }
+        }
+
+        private double _ask;
+        public double Ask
+        {
+            get { return _ask; }
+            set
+            {
+                if (_ask == value)
+                    return;
+
+                _ask = value;
+                RaisePropertyChanged(() => Ask);
             }
         }
 
@@ -204,6 +231,8 @@ namespace AppTrd.Options.ViewModel.Item
 
         public OptionItem(MarketDetailsResponse marketDetails)
         {
+            Epic = marketDetails.instrument.epic;
+
             Quantity = 1;
             Name = $"{marketDetails.instrument.name} ({marketDetails.instrument.expiry})";
 
@@ -217,12 +246,12 @@ namespace AppTrd.Options.ViewModel.Item
 
             Expiry = Convert.ToDateTime(marketDetails.instrument.expiryDetails.lastDealingDate, CultureInfo.GetCultureInfo("fr-FR"));
 
-            _bid = Convert.ToDouble(marketDetails.snapshot.bid);
-            _ask = Convert.ToDouble(marketDetails.snapshot.offer);
+            Bid = Convert.ToDouble(marketDetails.snapshot.bid);
+            Ask = Convert.ToDouble(marketDetails.snapshot.offer);
 
-            Prime = (_bid + _ask) / 2;
+            Prime = (Bid + Ask) / 2;
             CurrentPrime = Prime;
-            Spread = _ask - _bid;
+            Spread = Ask - Bid;
 
             InterestRate = EuriborHelper.GetInterestRate(Expiry.Subtract(DateTime.Now));
 
@@ -231,6 +260,28 @@ namespace AppTrd.Options.ViewModel.Item
             var time = Expiry.Subtract(DateTime.Now).TotalDays / 365;
 
             Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, Prime);
+
+            InterestRate = Math.Round(InterestRate * 100, 2);
+            Volatility = Math.Round(Volatility * 100, 2);
+        }
+
+        public void Update(MarketDetailsResponse marketDetails)
+        {
+            Bid = Convert.ToDouble(marketDetails.snapshot.bid);
+            Ask = Convert.ToDouble(marketDetails.snapshot.offer);
+
+            Prime = (Bid + Ask) / 2;
+            Spread = Ask - Bid;
+
+            InterestRate = EuriborHelper.GetInterestRate(Expiry.Subtract(DateTime.Now));
+
+            CurrentPrice = Convert.ToDouble(marketDetails.snapshot.netChange);
+            var isCall = Directions == OptionDirections.Call;
+            var time = Expiry.Subtract(DateTime.Now).TotalDays / 365;
+
+            var correctedPrime = Math.Min(Bid + Spread * (Bid / 200), Prime);
+
+            Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, correctedPrime);
 
             InterestRate = Math.Round(InterestRate * 100, 2);
             Volatility = Math.Round(Volatility * 100, 2);

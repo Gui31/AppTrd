@@ -2,9 +2,9 @@
 
 namespace AppTrd.Charts.View
 {
-    public partial class SettingsView
+    public partial class ChartsSettingsView
     {
-        public SettingsView()
+        public ChartsSettingsView()
         {
             InitializeComponent();
         }

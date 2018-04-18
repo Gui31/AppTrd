@@ -8,6 +8,7 @@ namespace AppTrd.Charts.ViewModel
     public class MainViewModel : BaseMainViewModel
     {
         private List<ChildWindow> _childWindows = new List<ChildWindow>();
+        private SettingsWindow _settingsWindow;
 
         public override void LoginCompleted()
         {
@@ -26,14 +27,41 @@ namespace AppTrd.Charts.ViewModel
 
         public void DisplaySettings()
         {
-            CurrentViewModel = ServiceLocator.Current.GetInstance<SettingsViewModel>();
+            if (_settingsWindow != null)
+                return;
+
+            var window = new SettingsWindow();
+            window.Closed += Window_Closed;
+
+            window.DataContext = ServiceLocator.Current.GetInstance<ChartsSettingsViewModel>();
+
+            window.Show();
+
+            _settingsWindow = window;
+        }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            CloseSettings();
+        }
+
+        public void CloseSettings()
+        {
+            var window = _settingsWindow;
+
+            if (window == null)
+                return;
+
+            window.Closed -= Window_Closed;
+            window.Close();
+            _settingsWindow = null;
         }
 
         public void OpenMarket(string epic)
         {
             var window = new ChildWindow();
 
-            window.DataContext = new CandleViewModel(this, epic);
+            window.DataContext = new MarketViewModel(this, epic);
 
             window.Show();
 

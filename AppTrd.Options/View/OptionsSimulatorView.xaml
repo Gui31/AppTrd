@@ -26,6 +26,8 @@
                 <TextBox Text="{Binding MinPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
                 <TextBlock Text=" &#xE2B7; " FontFamily="Segoe UI Symbol" />
                 <TextBox Text="{Binding MaxPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
+                
+                <Button Content="Reset" Command="{Binding ResetCommand}" />
             </StackPanel>
 
             <Grid Visibility="{Binding ElementName=HideOptionsButton, Path=IsChecked, Converter={StaticResource InvertBooleanToVisibilityConverter}}">

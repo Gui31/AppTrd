@@ -113,7 +113,6 @@
     <Compile Include="Model\InstrumentModel.cs" />
     <Compile Include="Model\OrderModel.cs" />
     <Compile Include="Model\PositionModel.cs" />
-    <Compile Include="Model\SettingsModel.cs" />
     <Compile Include="Model\TradeSubscriptionModel.cs" />
     <Compile Include="Model\TradeSubscriptionType.cs" />
     <Compile Include="Model\WatchlistMarketModel.cs" />
@@ -133,6 +132,8 @@
     <Compile Include="Service\ITradingService.cs" />
     <Compile Include="Service\Periods.cs" />
     <Compile Include="Service\SprintMarketsPeriods.cs" />
+    <Compile Include="Setting\ISettings.cs" />
+    <Compile Include="Setting\LoginSettings.cs" />
     <Compile Include="ViewModel\BaseMainViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="View\BaseView.cs" />

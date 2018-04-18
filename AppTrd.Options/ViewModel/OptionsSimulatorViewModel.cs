@@ -110,6 +110,8 @@ namespace AppTrd.Options.ViewModel
         public RelayCommand GoBackCommand { get; private set; }
         public RelayCommand UpdateCommand { get; private set; }
 
+        public RelayCommand ResetCommand { get; }
+
         public OptionsSimulatorViewModel(ITradingService tradingService)
         {
             _tradingService = tradingService;
@@ -118,6 +120,7 @@ namespace AppTrd.Options.ViewModel
 
             GoBackCommand = new RelayCommand(GoBack);
             UpdateCommand = new RelayCommand(Update);
+            ResetCommand = new RelayCommand(Reset);
         }
 
         private void GoBack()
@@ -130,6 +133,18 @@ namespace AppTrd.Options.ViewModel
         public void Update()
         {
             LastUpdate = DateTime.Now;
+        }
+
+        private void Reset()
+        {
+            foreach (var option in Options)
+            {
+                var details = _tradingService.GetMarketDetails(option.Epic);
+
+                option.Update(details);
+            }
+
+            Update();
         }
 
         public override void Init()

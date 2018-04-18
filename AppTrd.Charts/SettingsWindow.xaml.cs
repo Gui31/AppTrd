@@ -11,28 +11,17 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using AppTrd.Charts.ViewModel;
 
 namespace AppTrd.Charts
 {
     /// <summary>
-    /// Interaction logic for ChildWindow.xaml
+    /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class ChildWindow : Window
+    public partial class SettingsWindow : Window
     {
-        public ChildWindow()
+        public SettingsWindow()
         {
             InitializeComponent();
-
-            KeyDown += ChildWindow_KeyDown;
-        }
-
-        private void ChildWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            var vm = DataContext as MarketViewModel;
-
-            if (vm != null)
-                vm.KeyPressCommand.Execute(e.Key);
         }
     }
 }

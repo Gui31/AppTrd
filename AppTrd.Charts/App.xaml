@@ -11,6 +11,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AppTrd.BaseLib;component/Resources/Converters.xaml" />
+                <ResourceDictionary Source="/AppTrd.Charts;component/Resources/Styles.xaml" />
+                <ResourceDictionary Source="/AppTrd.Charts;component/Resources/Expander.xaml" />
                 <ResourceDictionary Source="/AppTrd.Charts;component/Resources/ViewTemplate.xaml" />
 
                 <ResourceDictionary>

@@ -10,29 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using AppTrd.Charts.ViewModel;
 
-namespace AppTrd.Charts
+namespace AppTrd.Charts.View.Settings
 {
     /// <summary>
-    /// Interaction logic for ChildWindow.xaml
+    /// Interaction logic for MarketPeriodSettingsView.xaml
     /// </summary>
-    public partial class ChildWindow : Window
+    public partial class MarketPeriodSettingsView : UserControl
     {
-        public ChildWindow()
+        public MarketPeriodSettingsView()
         {
             InitializeComponent();
-
-            KeyDown += ChildWindow_KeyDown;
-        }
-
-        private void ChildWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            var vm = DataContext as MarketViewModel;
-
-            if (vm != null)
-                vm.KeyPressCommand.Execute(e.Key);
         }
     }
 }

@@ -3,7 +3,9 @@
                     xmlns:viewModel="clr-namespace:AppTrd.Charts.ViewModel"
                     xmlns:view="clr-namespace:AppTrd.Charts.View"
                     xmlns:baseViewModel="clr-namespace:AppTrd.BaseLib.ViewModel;assembly=AppTrd.BaseLib"
-                    xmlns:baseView="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib">
+                    xmlns:baseView="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib"
+                    xmlns:settings="clr-namespace:AppTrd.Charts.ViewModel.Settings"
+                    xmlns:settings1="clr-namespace:AppTrd.Charts.View.Settings">
 
     <DataTemplate DataType="{x:Type baseViewModel:LoginViewModel}">
         <baseView:LoginView />
@@ -13,16 +15,24 @@
         <view:MarketSelectorView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type viewModel:CandleViewModel}">
-        <view:CandleView />
+    <DataTemplate DataType="{x:Type viewModel:MarketViewModel}">
+        <view:MarketView />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type viewModel:DashboardViewModel}">
         <view:DashboardView />
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type viewModel:SettingsViewModel}">
-        <view:SettingsView />
+    <DataTemplate DataType="{x:Type viewModel:ChartsSettingsViewModel}">
+        <view:ChartsSettingsView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type settings:KeyboardSettingsViewModel}">
+        <settings1:KeyboardSettingsView />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type settings:MarketSettingsViewModel}">
+        <view:MarketSelectorView />
     </DataTemplate>
 
 </ResourceDictionary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AppTrd.BaseLib.Model;
 using AppTrd.BaseLib.Service;
+using AppTrd.BaseLib.Setting;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Win32;
@@ -216,24 +217,24 @@ namespace AppTrd.BaseLib.ViewModel
 
         private void LoadSettings()
         {
-            var settings = _settingsService.GetSettings();
+            var settings = _settingsService.GetSettings<LoginSettings>();
 
-            if (settings.LoginInformations != null)
+            if (settings != null)
             {
-                _username = settings.LoginInformations.Username;
-                _apiKey = settings.LoginInformations.ApiKey;
-                _useDemo = settings.LoginInformations.UseDemo;
-                _saveLogin = settings.LoginInformations.SaveLogin;
+                _username = settings.Username;
+                _apiKey = settings.ApiKey;
+                _useDemo = settings.UseDemo;
+                _saveLogin = settings.SaveLogin;
             }
         }
 
         private void SaveSettings(string username, string apiKey, bool useDemo, bool saveLogin)
         {
-            var settings = _settingsService.GetSettings();
+            var settings = _settingsService.GetSettings<LoginSettings>();
 
             if (saveLogin)
             {
-                settings.LoginInformations = new LoginInformations
+                settings = new LoginSettings
                 {
                     Username = username,
                     ApiKey = apiKey,
@@ -243,10 +244,10 @@ namespace AppTrd.BaseLib.ViewModel
             }
             else
             {
-                settings.LoginInformations = null;
+                settings = null;
             }
 
-            _settingsService.SaveSettings();
+            _settingsService.SaveSettings<LoginSettings>(settings);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -39,6 +40,7 @@ namespace AppTrd.Options.Control
             public List<double> VerticalTicks { get; set; }
 
             public double[] Values { get; set; }
+            public bool[] KeyValues { get; set; }
             public double MinValue { get; set; }
             public double MaxValue { get; set; }
 
@@ -111,6 +113,7 @@ namespace AppTrd.Options.Control
         private readonly Typeface _typeface;
         private readonly List<int> _greenCollection;
         private readonly List<int> _redCollection;
+        private readonly int _black;
 
         private bool _invalidateContext;
         private RenderingContext _context;
@@ -126,6 +129,7 @@ namespace AppTrd.Options.Control
 
             _greenCollection.Add(GetColorData(0, 255, 150));
             _redCollection.Add(GetColorData(255, 0, 150));
+            _black = GetColorData(0, 0, 0);
 
             for (int i = 1; i < 256; i++)
             {
@@ -215,6 +219,8 @@ namespace AppTrd.Options.Control
 
                 Simulate(context);
 
+                //ShowKeyValues(context);
+
                 _context = context;
             }
             else
@@ -278,7 +284,7 @@ namespace AppTrd.Options.Control
 
                         if (option.Action == OptionActions.Buy)
                         {
-                            var v = - option.CurrentPrime;
+                            var v = -option.CurrentPrime;
                             var prime = BlackScholesHelper.Prime(isCall, price, option.Strike, option.InterestRate / 100, option.Volatility / 100, timeToExpiry);
                             v += Math.Max(0, prime);
 
@@ -307,8 +313,62 @@ namespace AppTrd.Options.Control
             });
 
             context.Values = values;
+            context.KeyValues = new bool[context.SimulationWidth * context.SimulationHeight];
             context.MinValue = minValue;
             context.MaxValue = maxValue;
+        }
+
+        private void ShowKeyValues(RenderingContext context)
+        {
+            for (int x = 0; x < context.SimulationWidth; x++)
+            {
+                var posCenter = 0;
+                var pos = 0;
+                var yCenter = 0;
+                var value = double.MinValue;
+
+                for (int y = 0; y < context.SimulationHeight; y++)
+                {
+                    var cursor = y * context.SimulationWidth + x;
+                    if (context.Values[cursor] > value)
+                    {
+                        value = context.Values[cursor];
+                        yCenter = y;
+                        posCenter = cursor;
+                    }
+                }
+
+                context.KeyValues[posCenter] = true;
+                value = double.MaxValue;
+
+                for (int y = 0; y < yCenter; y++)
+                {
+                    var cursor = y * context.SimulationWidth + x;
+                    if (Math.Abs(context.Values[cursor]) < value)
+                    {
+                        value = Math.Abs(context.Values[cursor]);
+                        pos = cursor;
+                    }
+                }
+
+                if (pos != posCenter)
+                    context.KeyValues[pos] = true;
+
+                value = double.MaxValue;
+
+                for (int y = yCenter; y < context.SimulationHeight; y++)
+                {
+                    var cursor = y * context.SimulationWidth + x;
+                    if (Math.Abs(context.Values[cursor]) < value)
+                    {
+                        value = Math.Abs(context.Values[cursor]);
+                        pos = cursor;
+                    }
+                }
+                
+                if (pos != posCenter)
+                    context.KeyValues[pos] = true;
+            }
         }
 
         private void Render(RenderingContext context)
@@ -358,6 +418,11 @@ namespace AppTrd.Options.Control
                             var val = (byte)(255 - (value / context.MinValue) * 255);
 
                             colorData = _redCollection[val];
+                        }
+
+                        if (context.KeyValues[i * context.SimulationWidth + j])
+                        {
+                            colorData = _black;
                         }
 
                         *((int*)pBackBuffer) = colorData;

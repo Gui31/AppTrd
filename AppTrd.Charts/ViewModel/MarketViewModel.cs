@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
@@ -12,12 +13,13 @@ using AppTrd.BaseLib.Messages;
 using AppTrd.BaseLib.Model;
 using AppTrd.BaseLib.Receiver;
 using AppTrd.BaseLib.Service;
+using AppTrd.Charts.Setting;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 
 namespace AppTrd.Charts.ViewModel
 {
-    public class CandleViewModel : BaseViewModel
+    public class MarketViewModel : BaseViewModel
     {
         private readonly MainViewModel _mainViewModel;
         private readonly ITradingService _tradingService;
@@ -155,7 +157,7 @@ namespace AppTrd.Charts.ViewModel
 
         public RelayCommand<Key> KeyPressCommand { get; }
 
-        public CandleViewModel(MainViewModel mainViewModel, string epic)
+        public MarketViewModel(MainViewModel mainViewModel, string epic)
         {
             _mainViewModel = mainViewModel;
             _tradingService = ServiceLocator.Current.GetInstance<ITradingService>();
@@ -168,7 +170,7 @@ namespace AppTrd.Charts.ViewModel
 
         public override void Init()
         {
-            _keyboardSettings = _settingsService.GetSettings().KeyboardSettings;
+            _keyboardSettings = _settingsService.GetSettings<ChartsSettings>().Keyboard;
 
             Account = _tradingService.CurrentAccount;
 
@@ -179,10 +181,10 @@ namespace AppTrd.Charts.ViewModel
 
             Title = _marketDetails.instrument.name;
 
-            if (_marketDetails.dealingRules.minDealSize.value != null)
-                Size = (double)_marketDetails.dealingRules.minDealSize.value.Value;
-            else
-                Size = 1;
+            //if (_marketDetails.dealingRules.minDealSize.value != null)
+            //    Size = (double)_marketDetails.dealingRules.minDealSize.value.Value;
+            //else
+            //    Size = 1;
 
             //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute);
             //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
@@ -192,9 +194,11 @@ namespace AppTrd.Charts.ViewModel
             //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
             //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 7);
 
-            OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21, 3, 5);
-            FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
-            OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes, 0);
+            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21, 3, 5);
+            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
+            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes, 0);
+
+            LoadMarketSettings();
 
             _tradingService.SubscribeToChartCandle();
 
@@ -206,9 +210,48 @@ namespace AppTrd.Charts.ViewModel
             Messenger.Default.Register<SettingsChangedMessage>(this, SettingsUpdated);
         }
 
+        private void LoadMarketSettings()
+        {
+            var settings = _settingsService.GetSettings<ChartsSettings>();
+
+            var marketSettings = settings?.Markets?.FirstOrDefault(m => m.Epic == _marketEpic);
+
+            if (marketSettings == null)
+            {
+                marketSettings = MarketSettings.GetDefault(_marketEpic);
+
+                if (settings.Markets == null)
+                    settings.Markets = new List<MarketSettings>();
+
+                settings.Markets.Add(marketSettings);
+
+                _settingsService.SaveSettings<ChartsSettings>();
+            }
+
+            Size = marketSettings.Size;
+
+            var tlp = marketSettings.TopLeftPeriod;
+            if (tlp.Mode == PeriodMode.Time)
+                OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)tlp.TimePeriod, tlp.AverageOpen);
+            else
+                OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, tlp.TickCount, tlp.AverageOpen, tlp.MaxSeconds);
+
+            var blp = marketSettings.BottomLeftPeriod;
+            if (blp.Mode == PeriodMode.Time)
+                FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)blp.TimePeriod, blp.AverageOpen);
+            else
+                FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, blp.TickCount, blp.AverageOpen, blp.MaxSeconds);
+
+            var rp = marketSettings.RightPeriod;
+            if (rp.Mode == PeriodMode.Time)
+                OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)rp.TimePeriod, rp.AverageOpen);
+            else
+                OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, rp.TickCount, rp.AverageOpen, rp.MaxSeconds);
+        }
+
         private void SettingsUpdated(SettingsChangedMessage message)
         {
-            _keyboardSettings = _settingsService.GetSettings().KeyboardSettings;
+            _keyboardSettings = _settingsService.GetSettings<ChartsSettings>().Keyboard;
         }
 
         private void KeyPress(Key key)
