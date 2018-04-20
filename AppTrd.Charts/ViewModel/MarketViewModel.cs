@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using dto.endpoint.marketdetails.v2;
@@ -29,31 +30,31 @@ namespace AppTrd.Charts.ViewModel
         private string _currency;
         private string _marketEpic;
 
-        private CandleReceiver _oneMinuteCandleReceiver;
-        public CandleReceiver OneMinuteCandleReceiver
+        private CandleReceiver _rightCandleReceiver;
+        public CandleReceiver RightCandleReceiver
         {
-            get { return _oneMinuteCandleReceiver; }
+            get { return _rightCandleReceiver; }
             set
             {
-                if (_oneMinuteCandleReceiver == value)
+                if (_rightCandleReceiver == value)
                     return;
 
-                _oneMinuteCandleReceiver = value;
-                RaisePropertyChanged(() => OneMinuteCandleReceiver);
+                _rightCandleReceiver = value;
+                RaisePropertyChanged(() => RightCandleReceiver);
             }
         }
 
-        private CandleReceiver _fiveMinutesCandleReceiver;
-        public CandleReceiver FiveMinutesCandleReceiver
+        private CandleReceiver _bottomLeftCandleReceiver;
+        public CandleReceiver BottomLeftCandleReceiver
         {
-            get { return _fiveMinutesCandleReceiver; }
+            get { return _bottomLeftCandleReceiver; }
             set
             {
-                if (_fiveMinutesCandleReceiver == value)
+                if (_bottomLeftCandleReceiver == value)
                     return;
 
-                _fiveMinutesCandleReceiver = value;
-                RaisePropertyChanged(() => FiveMinutesCandleReceiver);
+                _bottomLeftCandleReceiver = value;
+                RaisePropertyChanged(() => BottomLeftCandleReceiver);
             }
         }
 
@@ -141,6 +142,76 @@ namespace AppTrd.Charts.ViewModel
             }
         }
 
+        private bool _hasStop;
+        public bool HasStop
+        {
+            get { return _hasStop; }
+            set
+            {
+                if (_hasStop == value)
+                    return;
+
+                _hasStop = value;
+                RaisePropertyChanged(() => HasStop);
+            }
+        }
+
+        private bool _garantedStop;
+        public bool GarantedStop
+        {
+            get { return _garantedStop; }
+            set
+            {
+                if (_garantedStop == value)
+                    return;
+
+                _garantedStop = value;
+                RaisePropertyChanged(() => GarantedStop);
+            }
+        }
+
+        private int _stopDistance;
+        public int StopDistance
+        {
+            get { return _stopDistance; }
+            set
+            {
+                if (_stopDistance == value)
+                    return;
+
+                _stopDistance = value;
+                RaisePropertyChanged(() => StopDistance);
+            }
+        }
+
+        private bool _hasLimit;
+        public bool HasLimit
+        {
+            get { return _hasLimit; }
+            set
+            {
+                if (_hasLimit == value)
+                    return;
+
+                _hasLimit = value;
+                RaisePropertyChanged(() => HasLimit);
+            }
+        }
+
+        private int _limitDistance;
+        public int LimitDistance
+        {
+            get { return _limitDistance; }
+            set
+            {
+                if (_limitDistance == value)
+                    return;
+
+                _limitDistance = value;
+                RaisePropertyChanged(() => LimitDistance);
+            }
+        }
+
         private double _scalingFactor;
         public double ScalingFactor
         {
@@ -181,23 +252,6 @@ namespace AppTrd.Charts.ViewModel
 
             Title = _marketDetails.instrument.name;
 
-            //if (_marketDetails.dealingRules.minDealSize.value != null)
-            //    Size = (double)_marketDetails.dealingRules.minDealSize.value.Value;
-            //else
-            //    Size = 1;
-
-            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute);
-            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes);
-            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneHour);
-
-            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 0);
-            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
-            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 7);
-
-            //OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, 21, 3, 5);
-            //FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.OneMinute, 3);
-            //OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, Periods.FiveMinutes, 0);
-
             LoadMarketSettings();
 
             _tradingService.SubscribeToChartCandle();
@@ -228,6 +282,13 @@ namespace AppTrd.Charts.ViewModel
                 _settingsService.SaveSettings<ChartsSettings>();
             }
 
+            HasStop = marketSettings.HasStop;
+            GarantedStop = marketSettings.GarantedStop;
+            StopDistance = marketSettings.StopDistance;
+
+            HasLimit = marketSettings.HasLimit;
+            LimitDistance = marketSettings.LimitDistance;
+
             Size = marketSettings.Size;
 
             var tlp = marketSettings.TopLeftPeriod;
@@ -238,15 +299,15 @@ namespace AppTrd.Charts.ViewModel
 
             var blp = marketSettings.BottomLeftPeriod;
             if (blp.Mode == PeriodMode.Time)
-                FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)blp.TimePeriod, blp.AverageOpen);
+                BottomLeftCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)blp.TimePeriod, blp.AverageOpen);
             else
-                FiveMinutesCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, blp.TickCount, blp.AverageOpen, blp.MaxSeconds);
+                BottomLeftCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, blp.TickCount, blp.AverageOpen, blp.MaxSeconds);
 
             var rp = marketSettings.RightPeriod;
             if (rp.Mode == PeriodMode.Time)
-                OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)rp.TimePeriod, rp.AverageOpen);
+                RightCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)rp.TimePeriod, rp.AverageOpen);
             else
-                OneMinuteCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, rp.TickCount, rp.AverageOpen, rp.MaxSeconds);
+                RightCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, rp.TickCount, rp.AverageOpen, rp.MaxSeconds);
         }
 
         private void SettingsUpdated(SettingsChangedMessage message)
@@ -265,11 +326,14 @@ namespace AppTrd.Charts.ViewModel
             if (IsTradingKeyboardActive == false)
                 return;
 
+            double? stop = HasStop ? (double?)StopDistance : null;
+            double? limit = HasLimit ? (double?)LimitDistance : null;
+
             if (_keyboardSettings.BuyKey != null && key == _keyboardSettings.BuyKey.Key)
-                _tradingService.CreateOrder("BUY", _marketEpic, _currency, Size, null, null, null, false);
+                _tradingService.CreateOrder("BUY", _marketEpic, _currency, Size, null, stop, limit, GarantedStop);
 
             if (_keyboardSettings.SellKey != null && key == _keyboardSettings.SellKey.Key)
-                _tradingService.CreateOrder("SELL", _marketEpic, _currency, Size, null, null, null, false);
+                _tradingService.CreateOrder("SELL", _marketEpic, _currency, Size, null, stop, limit, GarantedStop);
         }
 
         public void CloseAllPosition()

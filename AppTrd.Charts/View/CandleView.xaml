@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:control="clr-namespace:AppTrd.Charts.Control"
              xmlns:view="clr-namespace:AppTrd.BaseLib.View;assembly=AppTrd.BaseLib"
+             xmlns:viewModel="clr-namespace:AppTrd.Charts.ViewModel"
              mc:Ignorable="d" 
+               d:DataContext="{d:DesignInstance viewModel:MarketViewModel}"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.RowDefinitions>
@@ -47,7 +49,25 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Size : " />
-                <TextBox Grid.Column="1" Text="{Binding Size, Mode=TwoWay}" />
+                <control:SizeSelectorControl Grid.Column="1" Size="{Binding Size}" MinWidth="40" />
+            </Grid>
+
+            <Grid Margin="10 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Stop : " />
+                <control:StopSelectorControl Grid.Column="1" HasStop="{Binding HasStop}" GarantedStop="{Binding GarantedStop}" StopDistance="{Binding StopDistance}" MinWidth="40" />
+            </Grid>
+
+            <Grid Margin="10 5 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Limit : " />
+                <control:LimitSelectorControl Grid.Column="1" HasLimit="{Binding HasLimit}" LimitDistance="{Binding LimitDistance}" MinWidth="40" />
             </Grid>
 
             <ToggleButton Content="&#x2328;" FontFamily="Segoe UI Symbol" FontSize="16" Width="24" Height="24" IsChecked="{Binding IsTradingKeyboardActive, Mode=TwoWay}" Margin="10 5 0 0" Focusable="False"/>
@@ -94,7 +114,7 @@
 
             <Rectangle Grid.Column="0" Width="1" Fill="Black" HorizontalAlignment="Right" SnapsToDevicePixels="True" />
         </Grid>
-        
+
         <Rectangle Grid.Row="1" Height="1" Fill="Black" VerticalAlignment="Top" SnapsToDevicePixels="True" />
     </Grid>
 </view:BaseView>

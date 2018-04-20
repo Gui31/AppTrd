@@ -38,11 +38,9 @@ namespace AppTrd.Charts
 
         private void MainWindowLoaded(object sender, RoutedEventArgs e)
         {
-            var main = ServiceLocator.Current.GetInstance<BaseMainViewModel>() as MainViewModel;
+            var main = ServiceLocator.Current.GetInstance<BaseMainViewModel>();
 
             main.Init();
-
-            main.DisplaySettings();
         }
     }
 }

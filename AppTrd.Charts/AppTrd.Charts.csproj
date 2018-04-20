@@ -90,7 +90,10 @@
     <Compile Include="Control\KeySelector.xaml.cs">
       <DependentUpon>KeySelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Control\LimitSelectorControl.cs" />
     <Compile Include="Control\ParamContentControl.cs" />
+    <Compile Include="Control\SizeSelectorControl.cs" />
+    <Compile Include="Control\StopSelectorControl.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>

@@ -14,27 +14,15 @@
             <TextBlock Text="Default parameters :" Style="{StaticResource SettingsHeaderText}" />
 
             <control:ParamContentControl Title="Stop">
-                <CheckBox IsChecked="{Binding HasStop}" />
-            </control:ParamContentControl>
-
-            <control:ParamContentControl Title="Garanted stop">
-                <CheckBox IsChecked="{Binding GarantedStop}" />
-            </control:ParamContentControl>
-
-            <control:ParamContentControl Title="Stop distance">
-                <TextBox Text="{Binding StopDistance}" />
+                <control:StopSelectorControl HasStop="{Binding HasStop}" GarantedStop="{Binding GarantedStop}" StopDistance="{Binding StopDistance}" />
             </control:ParamContentControl>
 
             <control:ParamContentControl Title="Limit">
-                <CheckBox IsChecked="{Binding GarantedStop}" />
-            </control:ParamContentControl>
-
-            <control:ParamContentControl Title="Limit distance">
-                <TextBox Text="{Binding StopDistance}" />
+                <control:LimitSelectorControl HasLimit="{Binding HasLimit}" LimitDistance="{Binding LimitDistance}" />
             </control:ParamContentControl>
 
             <control:ParamContentControl Title="Size">
-                <TextBox Text="{Binding Size}" />
+                <control:SizeSelectorControl Size="{Binding Size}" />
             </control:ParamContentControl>
 
             <TextBlock Text="Top left chart :" Style="{StaticResource SettingsHeaderText}" />

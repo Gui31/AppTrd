@@ -4,8 +4,8 @@
     xmlns:local="clr-namespace:AppTrd.Charts"
     xmlns:control="clr-namespace:AppTrd.Charts.Control">
 
-
     <Style TargetType="{x:Type control:ParamContentControl}">
+        <Setter Property="Margin" Value="0 0 0 2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type control:ParamContentControl}">
@@ -19,6 +19,76 @@
                         <TextBlock Grid.Column="0" Text="{TemplateBinding Title}" />
 
                         <ContentPresenter Grid.Column="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type control:StopSelectorControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:StopSelectorControl}">
+                    <Grid Background="Transparent">
+                        <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StopDisplay}" IsReadOnly="True" IsHitTestVisible="False" />
+
+                        <Popup IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsPopupOpen}" StaysOpen="False">
+                            <Border Background="White" BorderBrush="Black" BorderThickness="1">
+                                <StackPanel Margin="8">
+                                    <CheckBox Content="Stop" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HasStop}" />
+
+                                    <StackPanel IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HasStop}">
+                                        <CheckBox Content="Garanted" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=GarantedStop}"/>
+
+                                        <TextBox x:Name="MainInput" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=StopDistance}" MinWidth="50" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type control:LimitSelectorControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:LimitSelectorControl}">
+                    <Grid Background="Transparent">
+                        <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LimitDisplay}" IsReadOnly="True" IsHitTestVisible="False" />
+
+                        <Popup IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsPopupOpen}" StaysOpen="False">
+                            <Border Background="White" BorderBrush="Black" BorderThickness="1">
+                                <StackPanel Margin="8">
+                                    <CheckBox Content="Limit" IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HasLimit}" />
+
+                                    <StackPanel IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=HasLimit}">
+                                        <TextBox x:Name="MainInput" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LimitDistance}" MinWidth="50" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type control:SizeSelectorControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type control:SizeSelectorControl}">
+                    <Grid Background="Transparent">
+                        <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Size}" IsReadOnly="True" IsHitTestVisible="False" />
+
+                        <Popup IsOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsPopupOpen}" StaysOpen="False">
+                            <Border Background="White" BorderBrush="Black" BorderThickness="1">
+                                <StackPanel Margin="8">
+                                    <TextBox x:Name="MainInput" Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Size}" MinWidth="50" />
+                                </StackPanel>
+                            </Border>
+                        </Popup>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
