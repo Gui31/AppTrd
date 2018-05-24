@@ -87,10 +87,14 @@
     <Compile Include="Helper\BlackScholesHelper.cs" />
     <Compile Include="Helper\EuriborHelper.cs" />
     <Compile Include="ViewModel\Item\OptionItem.cs" />
+    <Compile Include="ViewModel\MainMenuViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\OptionsSelectorViewModel.cs" />
     <Compile Include="ViewModel\OptionsSimulatorViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="View\MainMenuView.xaml.cs">
+      <DependentUpon>MainMenuView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\OptionsSelectorView.xaml.cs">
       <DependentUpon>OptionsSelectorView.xaml</DependentUpon>
     </Compile>
@@ -110,6 +114,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Resources\ViewTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainMenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

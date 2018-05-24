@@ -26,6 +26,7 @@ namespace AppTrd.Options.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<BaseMainViewModel>(() => ServiceLocator.Current.GetInstance<MainViewModel>());
             SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<MainMenuViewModel>();
             SimpleIoc.Default.Register<OptionsSelectorViewModel>();
             SimpleIoc.Default.Register<OptionsSimulatorViewModel>();
         }

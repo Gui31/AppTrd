@@ -125,8 +125,9 @@ namespace AppTrd.Options.ViewModel
         {
             var mainViewModel = ServiceLocator.Current.GetInstance<MainViewModel>();
 
-            mainViewModel.SimulateOptions();
+            mainViewModel.SimulateOptions(SelectedMarkets.Select(m => m.Epic).ToList());
         }
+
         private bool CanValidate()
         {
             return SelectedMarkets != null && SelectedMarkets.Count > 0;

@@ -11,7 +11,12 @@ namespace AppTrd.Options.ViewModel
     {
         public override void LoginCompleted()
         {
-            CurrentViewModel = ServiceLocator.Current.GetInstance<OptionsSelectorViewModel>();
+            MainMenu();
+        }
+
+        public void MainMenu()
+        {
+            CurrentViewModel = ServiceLocator.Current.GetInstance<MainMenuViewModel>();
         }
 
         public void SelectOptions()
@@ -19,9 +24,22 @@ namespace AppTrd.Options.ViewModel
             CurrentViewModel = ServiceLocator.Current.GetInstance<OptionsSelectorViewModel>();
         }
 
-        public void SimulateOptions()
+        public void SimulateOptions(List<string> epics)
         {
-            CurrentViewModel = ServiceLocator.Current.GetInstance<OptionsSimulatorViewModel>();
+            var vm = ServiceLocator.Current.GetInstance<OptionsSimulatorViewModel>();
+
+            vm.Prepare(epics);
+
+            CurrentViewModel = vm;
+        }
+
+        public void SimulateOptions(string marketId)
+        {
+            var vm = ServiceLocator.Current.GetInstance<OptionsSimulatorViewModel>();
+
+            vm.Prepare(marketId);
+
+            CurrentViewModel = vm;
         }
     }
 }

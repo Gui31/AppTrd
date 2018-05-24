@@ -7,6 +7,7 @@ using dto.endpoint.marketdetails.v2;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Practices.ServiceLocation;
 using AppTrd.BaseLib.Common;
+using AppTrd.BaseLib.Model;
 using AppTrd.BaseLib.ViewModel;
 using AppTrd.BaseLib.Service;
 using AppTrd.Options.ViewModel.Item;
@@ -16,6 +17,8 @@ namespace AppTrd.Options.ViewModel
     public class OptionsSimulatorViewModel : BaseViewModel
     {
         private ITradingService _tradingService;
+
+        private List<OptionItem> _preparedOptions;
 
         private List<OptionItem> _options;
         public List<OptionItem> Options
@@ -127,7 +130,7 @@ namespace AppTrd.Options.ViewModel
         {
             var mainViewModel = ServiceLocator.Current.GetInstance<MainViewModel>();
 
-            mainViewModel.SelectOptions();
+            mainViewModel.MainMenu();
         }
 
         public void Update()
@@ -144,22 +147,50 @@ namespace AppTrd.Options.ViewModel
                 option.Update(details);
             }
 
+            CurrentPrice = Options.Average(o => o.CurrentPrice);
+
             Update();
         }
 
-        public override void Init()
+        public void Prepare(List<string> epics)
         {
             var options = new List<OptionItem>();
-            var selector = ServiceLocator.Current.GetInstance<OptionsSelectorViewModel>();
 
-            foreach (var selectedMarket in selector.SelectedMarkets)
+            foreach (var epic in epics)
             {
-                var details = _tradingService.GetMarketDetails(selectedMarket.Epic);
+                var details = _tradingService.GetMarketDetails(epic);
 
                 options.Add(new OptionItem(details));
             }
 
-            Options = options;
+            _preparedOptions = options;
+        }
+
+        public void Prepare(string marketId)
+        {
+            var options = new List<OptionItem>();
+
+            var positions = _tradingService.Positions.Where(p => p.Instrument.Epic.StartsWith("OP.") && p.Instrument.InstrumentData.marketId == marketId);
+
+            foreach (var position in positions)
+            {
+                var details = _tradingService.GetMarketDetails(position.Instrument.Epic);
+
+                var option = new OptionItem(details);
+
+                option.Action = position.Direction == PositionModel.Directions.BUY ? OptionActions.Buy : OptionActions.Sell;
+                option.CurrentPrime = position.OpenLevel;
+                option.Quantity = position.DealSize * position.ContractSize;
+
+                options.Add(option);
+            }
+
+            _preparedOptions = options;
+        }
+
+        public override void Init()
+        {
+            Options = _preparedOptions;
 
             CurrentPrice = Options.Average(o => o.CurrentPrice);
 

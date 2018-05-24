@@ -25,7 +25,7 @@ namespace AppTrd.Options.ViewModel.Item
 
     public class OptionItem : ViewModelBase
     {
-        public string Epic { get;}
+        public string Epic { get; }
 
         private string _name;
         public string Name
@@ -66,6 +66,20 @@ namespace AppTrd.Options.ViewModel.Item
 
                 _prime = value;
                 RaisePropertyChanged(() => Prime);
+            }
+        }
+
+        private string _primeString;
+        public string PrimeString
+        {
+            get { return _primeString; }
+            set
+            {
+                if (_primeString == value)
+                    return;
+
+                _primeString = value;
+                RaisePropertyChanged(() => PrimeString);
             }
         }
 
@@ -253,13 +267,17 @@ namespace AppTrd.Options.ViewModel.Item
             CurrentPrime = Prime;
             Spread = Ask - Bid;
 
+            PrimeString = $"({Ask}/{Bid})";
+
             InterestRate = EuriborHelper.GetInterestRate(Expiry.Subtract(DateTime.Now));
 
             CurrentPrice = Convert.ToDouble(marketDetails.snapshot.netChange);
             var isCall = Directions == OptionDirections.Call;
             var time = Expiry.Subtract(DateTime.Now).TotalDays / 365;
 
-            Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, Prime);
+            var correctedPrime = Math.Min(Bid + Spread * (Bid / 20), Prime);
+
+            Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, correctedPrime);
 
             InterestRate = Math.Round(InterestRate * 100, 2);
             Volatility = Math.Round(Volatility * 100, 2);
@@ -279,7 +297,7 @@ namespace AppTrd.Options.ViewModel.Item
             var isCall = Directions == OptionDirections.Call;
             var time = Expiry.Subtract(DateTime.Now).TotalDays / 365;
 
-            var correctedPrime = Math.Min(Bid + Spread * (Bid / 200), Prime);
+            var correctedPrime = Math.Min(Bid + Spread * (Bid / 20), Prime);
 
             Volatility = BlackScholesHelper.ImpliedVolatility(isCall, CurrentPrice, Strike, time, 0, correctedPrime);
 

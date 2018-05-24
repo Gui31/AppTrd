@@ -26,8 +26,8 @@
                 <TextBox Text="{Binding MinPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
                 <TextBlock Text=" &#xE2B7; " FontFamily="Segoe UI Symbol" />
                 <TextBox Text="{Binding MaxPrice, Mode=TwoWay, ValidatesOnExceptions=True}"/>
-                
-                <Button Content="Reset" Command="{Binding ResetCommand}" />
+
+                <Button Content="Refresh" Command="{Binding ResetCommand}" Margin="4 0 0 0" />
             </StackPanel>
 
             <Grid Visibility="{Binding ElementName=HideOptionsButton, Path=IsChecked, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
@@ -61,7 +61,7 @@
 
                     <ItemsControl ItemsSource="{Binding Options}" Grid.Row="1">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="item:OptionItem">
                                 <Grid Margin="0 0 0 4">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" SharedSizeGroup="NameColumn" />
@@ -89,7 +89,7 @@
 
                                         <TextBox Text="{Binding CurrentPrime, Mode=TwoWay}" Grid.Column="0" />
 
-                                        <TextBlock Text="{Binding Prime, StringFormat=({0})}" Grid.Column="1" />
+                                        <TextBlock Text="{Binding PrimeString}" Grid.Column="1" />
                                     </Grid>
 
                                     <TextBox Text="{Binding Quantity, Mode=TwoWay}" Grid.Column="3" Margin="4 0 0 0" />
