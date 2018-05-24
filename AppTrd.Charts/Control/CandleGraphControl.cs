@@ -142,6 +142,7 @@ namespace AppTrd.Charts.Control
             set { SetValue(PeriodProperty, value); }
         }
 
+
         public static readonly DependencyProperty HideTimeGridProperty = DependencyProperty.Register(
             "HideTimeGrid", typeof(bool), typeof(CandleGraphControl), new PropertyMetadata(default(bool)));
 
@@ -149,6 +150,15 @@ namespace AppTrd.Charts.Control
         {
             get { return (bool)GetValue(HideTimeGridProperty); }
             set { SetValue(HideTimeGridProperty, value); }
+        }
+
+        public static readonly DependencyProperty PivotPointsProperty = DependencyProperty.Register(
+            "PivotPoints", typeof(List<PivotPointModel>), typeof(CandleGraphControl), new PropertyMetadata(default(List<PivotPointModel>)));
+
+        public List<PivotPointModel> PivotPoints
+        {
+            get { return (List<PivotPointModel>)GetValue(PivotPointsProperty); }
+            set { SetValue(PivotPointsProperty, value); }
         }
 
         public CandleGraphControl()
@@ -209,13 +219,14 @@ namespace AppTrd.Charts.Control
                     max = data.High;
             }
 
-            var margin = Math.Max((max - min) * 0.05, max * 0.0005);
-            margin = max * 0.00025;
+            var margin = Math.Max((max - min) * 0.1, max * 0.0005);
 
             _graphContext.Min = min - margin;
             _graphContext.Max = max + margin;
 
             RenderGrid(drawingContext);
+
+            RenderPivotPoints(drawingContext);
 
             var index = 0;
             foreach (var candleData in datas)
@@ -377,6 +388,45 @@ namespace AppTrd.Charts.Control
                 drawingContext.DrawLine(pen, new Point(0, y), new Point(_graphContext.GraphWidth - 1, y));
                 drawingContext.Pop();
             }
+        }
+
+        private void RenderPivotPoints(DrawingContext drawingContext)
+        {
+            var pps = PivotPoints;
+
+            if (pps == null)
+                return;
+
+            foreach (PivotPointModel pp in pps)
+            {
+                RenderPivot(drawingContext, $"Piv {pp.Period[0]}", pp.Pivot, Brushes.Black);
+
+                RenderPivot(drawingContext, $"S1 {pp.Period[0]}", pp.S1, Brushes.Green);
+                RenderPivot(drawingContext, $"S2 {pp.Period[0]}", pp.S2, Brushes.Green);
+                RenderPivot(drawingContext, $"S3 {pp.Period[0]}", pp.S3, Brushes.Green);
+
+                RenderPivot(drawingContext, $"R1 {pp.Period[0]}", pp.R1, Brushes.DarkRed);
+                RenderPivot(drawingContext, $"R2 {pp.Period[0]}", pp.R2, Brushes.DarkRed);
+                RenderPivot(drawingContext, $"R3 {pp.Period[0]}", pp.R3, Brushes.DarkRed);
+            }
+        }
+
+        private void RenderPivot(DrawingContext drawingContext, string name, double value, Brush brush)
+        {
+            var y = Math.Round(_graphContext.GraphHeigh - ((value - _graphContext.Min) / (_graphContext.Max - _graphContext.Min) * _graphContext.GraphHeigh));
+
+            var typeface = new Typeface(new FontFamily("Segoe UI"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
+            var text = new FormattedText(name, CultureInfo.CurrentUICulture, FlowDirection.LeftToRight, typeface, 10, Brushes.White);
+
+            drawingContext.DrawRectangle(brush, null, new Rect(_graphContext.GraphWidth, y - text.Height / 2, text.Width, text.Height));
+            drawingContext.DrawText(text, new Point(_graphContext.GraphWidth, y - text.Height / 2));
+
+            var pen = new Pen(brush, 1);
+            pen.DashStyle = new DashStyle(new []{5.0, 5.0}, 0);
+
+            drawingContext.PushOpacity(1);
+            drawingContext.DrawLine(pen, new Point(0, y), new Point(_graphContext.GraphWidth - 1, y));
+            drawingContext.Pop();
         }
 
         private void RenderPosition(DrawingContext drawingContext, PositionModel position, CandleData lastCandle)

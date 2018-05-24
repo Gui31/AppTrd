@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -25,10 +26,10 @@ namespace AppTrd.Charts.ViewModel
         private readonly MainViewModel _mainViewModel;
         private readonly ITradingService _tradingService;
         private readonly ISettingsService _settingsService;
-        private MarketDetailsResponse _marketDetails;
         private KeyboardSettings _keyboardSettings;
         private string _currency;
         private string _marketEpic;
+        private InstrumentModel _instrument;
 
         private CandleReceiver _rightCandleReceiver;
         public CandleReceiver RightCandleReceiver
@@ -58,17 +59,17 @@ namespace AppTrd.Charts.ViewModel
             }
         }
 
-        private CandleReceiver _oneHourCandleReceiver;
-        public CandleReceiver OneHourCandleReceiver
+        private CandleReceiver _topLeftCandleReceiver;
+        public CandleReceiver TopLeftCandleReceiver
         {
-            get { return _oneHourCandleReceiver; }
+            get { return _topLeftCandleReceiver; }
             set
             {
-                if (_oneHourCandleReceiver == value)
+                if (_topLeftCandleReceiver == value)
                     return;
 
-                _oneHourCandleReceiver = value;
-                RaisePropertyChanged(() => OneHourCandleReceiver);
+                _topLeftCandleReceiver = value;
+                RaisePropertyChanged(() => TopLeftCandleReceiver);
             }
         }
 
@@ -76,7 +77,7 @@ namespace AppTrd.Charts.ViewModel
         public ObservableCollection<PositionModel> Positions
         {
             get { return _positions; }
-            set
+            private set
             {
                 if (_positions == value)
                     return;
@@ -226,6 +227,48 @@ namespace AppTrd.Charts.ViewModel
             }
         }
 
+        private List<PivotPointModel> _pivotPoints;
+        public List<PivotPointModel> PivotPoints
+        {
+            get { return _pivotPoints; }
+            set
+            {
+                if (_pivotPoints == value)
+                    return;
+
+                _pivotPoints = value;
+                RaisePropertyChanged(() => PivotPoints);
+            }
+        }
+
+        private double _marketPnl;
+        public double MarketPnl
+        {
+            get { return _marketPnl; }
+            set
+            {
+                if (_marketPnl == value)
+                    return;
+
+                _marketPnl = value;
+                RaisePropertyChanged(() => MarketPnl);
+            }
+        }
+
+        private bool _hasPositions;
+        public bool HasPositions
+        {
+            get { return _hasPositions; }
+            set
+            {
+                if (_hasPositions == value)
+                    return;
+
+                _hasPositions = value;
+                RaisePropertyChanged(() => HasPositions);
+            }
+        }
+
         public RelayCommand<Key> KeyPressCommand { get; }
 
         public MarketViewModel(MainViewModel mainViewModel, string epic)
@@ -245,19 +288,22 @@ namespace AppTrd.Charts.ViewModel
 
             Account = _tradingService.CurrentAccount;
 
-            _marketDetails = _tradingService.GetMarketDetails(_marketEpic);
-            _currency = _marketDetails.instrument.currencies.First().code;
-            DoublePlacesFactor = _marketDetails.snapshot.doublePlacesFactor;
-            ScalingFactor = _marketDetails.snapshot.scalingFactor;
+            _instrument = _tradingService.GetInstrument(_marketEpic);
 
-            Title = _marketDetails.instrument.name;
+            _currency = _instrument.InstrumentData.currencies.First().code;
+            DoublePlacesFactor = _instrument.SnapshotData.doublePlacesFactor;
+            ScalingFactor = _instrument.SnapshotData.scalingFactor;
+
+            Title = _instrument.InstrumentData.name;
 
             LoadMarketSettings();
+
+            PivotPoints = _tradingService.GetPivotPoints(_marketEpic);
 
             _tradingService.SubscribeToChartCandle();
 
             foreach (var position in _tradingService.Positions.Where(p => p.Instrument.Epic == _marketEpic))
-                Positions.Add(position);
+                AddPosition(position);
 
             Messenger.Default.Register<PositionAddedMessage>(this, _marketEpic, PositionAddedMessageReceived);
             Messenger.Default.Register<PositionDeletedMessage>(this, _marketEpic, PositionDeletedMessageReceived);
@@ -293,9 +339,9 @@ namespace AppTrd.Charts.ViewModel
 
             var tlp = marketSettings.TopLeftPeriod;
             if (tlp.Mode == PeriodMode.Time)
-                OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)tlp.TimePeriod, tlp.AverageOpen);
+                TopLeftCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)tlp.TimePeriod, tlp.AverageOpen);
             else
-                OneHourCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, tlp.TickCount, tlp.AverageOpen, tlp.MaxSeconds);
+                TopLeftCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, tlp.TickCount, tlp.AverageOpen, tlp.MaxSeconds);
 
             var blp = marketSettings.BottomLeftPeriod;
             if (blp.Mode == PeriodMode.Time)
@@ -348,12 +394,42 @@ namespace AppTrd.Charts.ViewModel
 
         private void PositionAddedMessageReceived(PositionAddedMessage position)
         {
-            Positions.Add(position.Position);
+            AddPosition(position.Position);
         }
 
         private void PositionDeletedMessageReceived(PositionDeletedMessage position)
         {
-            Positions.Remove(position.Position);
+            RemovePosition(position.Position);
+        }
+
+        private void AddPosition(PositionModel position)
+        {
+            Positions.Add(position);
+
+            position.PropertyChanged += PositionPropertyChanged;
+
+            UpdatePnl();
+        }
+
+        private void RemovePosition(PositionModel position)
+        {
+            Positions.Remove(position);
+
+            position.PropertyChanged += PositionPropertyChanged;
+
+            UpdatePnl();
+        }
+
+        private void PositionPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(PositionModel.Pnl))
+                UpdatePnl();
+        }
+
+        private void UpdatePnl()
+        {
+            HasPositions = Positions.Any();
+            MarketPnl = Positions.Sum(p => p.Pnl);
         }
     }
 }

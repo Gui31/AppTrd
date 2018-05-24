@@ -87,32 +87,40 @@
 
                 <control:CandleGraphControl Grid.Row="0"
                                             ClipToBounds="True"
-                                            Candles="{Binding OneHourCandleReceiver.Candles}" 
-                                            Period="{Binding OneHourCandleReceiver.Period}"
+                                            Candles="{Binding TopLeftCandleReceiver.Candles}" 
+                                            Period="{Binding TopLeftCandleReceiver.Period}"
                                             Positions="{Binding Positions}"
                                             ScalingFactor="{Binding ScalingFactor}"
-                                            DoublePlacesFactor="{Binding DoublePlacesFactor}" />
+                                            DoublePlacesFactor="{Binding DoublePlacesFactor}"
+                                            PivotPoints="{Binding PivotPoints}" />
 
                 <control:CandleGraphControl Grid.Row="1"
                                             ClipToBounds="True"
-                                            Candles="{Binding FiveMinutesCandleReceiver.Candles}" 
-                                            Period="{Binding FiveMinutesCandleReceiver.Period}"
+                                            Candles="{Binding BottomLeftCandleReceiver.Candles}" 
+                                            Period="{Binding BottomLeftCandleReceiver.Period}"
                                             Positions="{Binding Positions}"
                                             ScalingFactor="{Binding ScalingFactor}"
-                                            DoublePlacesFactor="{Binding DoublePlacesFactor}" />
+                                            DoublePlacesFactor="{Binding DoublePlacesFactor}"
+                                            PivotPoints="{Binding PivotPoints}" />
 
                 <Rectangle Grid.Row="0" Height="1" Fill="Black" VerticalAlignment="Bottom" SnapsToDevicePixels="True" />
             </Grid>
 
             <control:CandleGraphControl Grid.Column="1"
                                         ClipToBounds="True"
-                                        Candles="{Binding OneMinuteCandleReceiver.Candles}" 
-                                        Period="{Binding OneMinuteCandleReceiver.Period}"
+                                        Candles="{Binding RightCandleReceiver.Candles}" 
+                                        Period="{Binding RightCandleReceiver.Period}"
                                         Positions="{Binding Positions}"
                                         ScalingFactor="{Binding ScalingFactor}"
-                                        DoublePlacesFactor="{Binding DoublePlacesFactor}" />
+                                        DoublePlacesFactor="{Binding DoublePlacesFactor}"
+                                        PivotPoints="{Binding PivotPoints}" />
 
-            <Rectangle Grid.Column="0" Width="1" Fill="Black" HorizontalAlignment="Right" SnapsToDevicePixels="True" />
+            <TextBlock Grid.Column="1" Text="{Binding MarketPnl, Converter={StaticResource DoubleToPriceConverter}}" 
+                       Foreground="{Binding MarketPnl, Converter={StaticResource PnlToBrushConverter}}"
+                       Visibility="{Binding HasPositions, Converter={StaticResource BooleanToVisibilityConverter}}"
+                       FontSize="52" FontWeight="Bold" Opacity="0.4" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10 0" />
+
+            <Rectangle Grid.Column="0" Width="1" Fill="Black" HorizontalAlignment="Left" SnapsToDevicePixels="True" />
         </Grid>
 
         <Rectangle Grid.Row="1" Height="1" Fill="Black" VerticalAlignment="Top" SnapsToDevicePixels="True" />

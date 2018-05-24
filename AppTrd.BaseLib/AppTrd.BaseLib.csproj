@@ -112,6 +112,7 @@
     <Compile Include="Model\ConfirmModel.cs" />
     <Compile Include="Model\InstrumentModel.cs" />
     <Compile Include="Model\OrderModel.cs" />
+    <Compile Include="Model\PivotPointModel.cs" />
     <Compile Include="Model\PositionModel.cs" />
     <Compile Include="Model\TradeSubscriptionModel.cs" />
     <Compile Include="Model\TradeSubscriptionType.cs" />

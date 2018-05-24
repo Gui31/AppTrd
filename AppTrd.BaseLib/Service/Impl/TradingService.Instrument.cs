@@ -16,7 +16,7 @@ namespace AppTrd.BaseLib.Service.Impl
 {
     public partial class TradingService
     {
-        internal InstrumentModel GetInstrument(string epic)
+        public InstrumentModel GetInstrument(string epic)
         {
             var market = Instruments.FirstOrDefault(m => m.Epic == epic);
 
@@ -51,6 +51,117 @@ namespace AppTrd.BaseLib.Service.Impl
             var result = _igRestApiClient.marketDetailsV2(epic).RunSync();
 
             return result.Response;
+        }
+
+        public List<PivotPointModel> GetPivotPoints(string epic)
+        {
+            var result = new List<PivotPointModel>();
+
+            result.Add(GetDayPivot(epic));
+            result.Add(GetWeekPivot(epic));
+            result.Add(GetMonthPivot(epic));
+
+            return result;
+        }
+
+        private PivotPointModel GetDayPivot(string epic)
+        {
+            var hist = GetPriceList(epic, Periods.OneDay, 3).prices;
+
+            if (hist == null)
+                return null;
+
+            hist.Reverse();
+
+            foreach (var price in hist)
+            {
+                var time = DateTime.Parse(price.snapshotTime);
+
+                if (time.Date == DateTime.Now.Date)
+                    continue;
+
+                if (time.DayOfWeek == DayOfWeek.Saturday || time.DayOfWeek == DayOfWeek.Sunday)
+                    continue;
+
+                var low = (price.lowPrice.ask + price.lowPrice.bid) / 2;
+                var high = (price.highPrice.ask + price.highPrice.bid) / 2;
+                var close = (price.closePrice.ask + price.closePrice.bid) / 2;
+
+                return GetPivotPoint("Day", low.Value, high.Value, close.Value);
+            }
+
+            return null;
+        }
+
+        private PivotPointModel GetWeekPivot(string epic)
+        {
+            var hist = GetPriceList(epic, Periods.OneWeek, 3).prices;
+
+            if (hist == null)
+                return null;
+
+            hist.Reverse();
+
+            foreach (var price in hist)
+            {
+                var time = DateTime.Parse(price.snapshotTime);
+
+                if (time.Day - time.DayOfWeek == DateTime.Now.Day - DateTime.Now.DayOfWeek)
+                    continue;
+
+                var low = (price.lowPrice.ask + price.lowPrice.bid) / 2;
+                var high = (price.highPrice.ask + price.highPrice.bid) / 2;
+                var close = (price.closePrice.ask + price.closePrice.bid) / 2;
+
+                return GetPivotPoint("Week", low.Value, high.Value, close.Value);
+            }
+
+            return null;
+        }
+
+        private PivotPointModel GetMonthPivot(string epic)
+        {
+            var hist = GetPriceList(epic, Periods.OneMonth, 3).prices;
+
+            if (hist == null)
+                return null;
+
+            hist.Reverse();
+
+            foreach (var price in hist)
+            {
+                var time = DateTime.Parse(price.snapshotTime);
+
+                if (time.Month == DateTime.Now.Month)
+                    continue;
+
+                var low = (price.lowPrice.ask + price.lowPrice.bid) / 2;
+                var high = (price.highPrice.ask + price.highPrice.bid) / 2;
+                var close = (price.closePrice.ask + price.closePrice.bid) / 2;
+
+                return GetPivotPoint("Month", low.Value, high.Value, close.Value);
+            }
+
+            return null;
+        }
+
+        private PivotPointModel GetPivotPoint(string period, double low, double high, double close)
+        {
+            var pp = new PivotPointModel();
+
+            pp.Period = period;
+
+            pp.Pivot = (low + high + close) / 3;
+
+            pp.R1 = pp.Pivot * 2 - low;
+            pp.R2 = pp.Pivot + (high - low);
+            pp.R3 = high + 2 * (pp.Pivot - low);
+
+            pp.S1 = pp.Pivot * 2 - high;
+            pp.S2 = pp.Pivot - (high - low);
+            pp.S3 = low - 2 * (high - pp.Pivot);
+
+            return pp;
         }
 
         public ClientSentimentModel GetClientSentiment(string epic)

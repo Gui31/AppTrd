@@ -16,7 +16,7 @@ namespace AppTrd.BaseLib.Service
 
         List<AccountModel> Accounts { get; }
         AccountModel CurrentAccount { get; }
-        
+
         List<InstrumentModel> Instruments { get; }
         List<PositionModel> Positions { get; }
         List<OrderModel> Orders { get; }
@@ -30,7 +30,11 @@ namespace AppTrd.BaseLib.Service
 
         string CreateOrder(string direction, string epic, string currency, double size, double? level, double? stop, double? limit, bool gStop);
 
+        InstrumentModel GetInstrument(string epic);
+
         MarketDetailsResponse GetMarketDetails(string epic);
+
+        List<PivotPointModel> GetPivotPoints(string epic);
 
         PriceList GetPriceList(string epic, Periods period, int count);
 
