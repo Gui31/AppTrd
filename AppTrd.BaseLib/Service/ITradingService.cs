@@ -23,7 +23,7 @@ namespace AppTrd.BaseLib.Service
 
         bool Login(string username, string password, string apiKey, bool useDemo);
         bool SelectAccount(AccountModel account);
-        void Logout();
+        void Logout(bool stayConnected);
 
         //List<WatchlistModel> GetWatchlists();
         //List<WatchlistMarketModel> GetWatchlistMarkets(WatchlistModel watchlist);

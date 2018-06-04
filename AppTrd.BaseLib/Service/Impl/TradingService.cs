@@ -187,9 +187,9 @@ namespace AppTrd.BaseLib.Service.Impl
             return IsConnected;
         }
 
-        public void Logout()
+        public void Logout(bool stayConnected)
         {
-            if (_igRestApiClient != null)
+            if (_igRestApiClient != null && stayConnected == false)
                 _igRestApiClient.logout();
 
             if (_igStreamApiClient != null)
@@ -266,7 +266,7 @@ namespace AppTrd.BaseLib.Service.Impl
             if (_candleMultiSubKey != null)
                 _igStreamApiClient.UnsubscribeTableKey(_candleMultiSubKey);
 
-            Logout();
+            Logout(true);
         }
     }
 }
