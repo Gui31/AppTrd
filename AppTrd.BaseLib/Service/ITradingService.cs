@@ -27,9 +27,7 @@ namespace AppTrd.BaseLib.Service
 
         //List<WatchlistModel> GetWatchlists();
         //List<WatchlistMarketModel> GetWatchlistMarkets(WatchlistModel watchlist);
-
-        string CreateOrder(string direction, string epic, string currency, double size, double? level, double? stop, double? limit, bool gStop);
-
+        
         InstrumentModel GetInstrument(string epic);
 
         MarketDetailsResponse GetMarketDetails(string epic);
@@ -37,11 +35,6 @@ namespace AppTrd.BaseLib.Service
         List<PivotPointModel> GetPivotPoints(string epic);
 
         PriceList GetPriceList(string epic, Periods period, int count);
-
-        void CloseOrder(PositionModel.Directions direction, string epic, double size);
-        void CloseOrder(PositionModel position, double size, double? level);
-
-        void UpdateOrder(PositionModel position, double? stopLevel, double? limitLevel);
 
         CandleReceiver GetCandleReceiver(string epic, Periods period, int averageOpen);
         CandleReceiver GetCandleReceiver(string epic, int ticksCount, int averageOpen, int maxSeconds);

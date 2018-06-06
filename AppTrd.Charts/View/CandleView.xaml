@@ -42,35 +42,6 @@
                 <TextBlock Grid.Column="0" Text="Account PNL : " />
                 <TextBlock Grid.Column="1" Text="{Binding Account.ProfitLoss}" />
             </Grid>
-
-            <Grid Margin="10 5 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Size : " />
-                <control:SizeSelectorControl Grid.Column="1" Size="{Binding Size}" MinWidth="40" />
-            </Grid>
-
-            <Grid Margin="10 5 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Stop : " />
-                <control:StopSelectorControl Grid.Column="1" HasStop="{Binding HasStop}" GarantedStop="{Binding GarantedStop}" StopDistance="{Binding StopDistance}" MinWidth="40" />
-            </Grid>
-
-            <Grid Margin="10 5 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="Limit : " />
-                <control:LimitSelectorControl Grid.Column="1" HasLimit="{Binding HasLimit}" LimitDistance="{Binding LimitDistance}" MinWidth="40" />
-            </Grid>
-
-            <ToggleButton Content="&#x2328;" FontFamily="Segoe UI Symbol" FontSize="16" Width="24" Height="24" IsChecked="{Binding IsTradingKeyboardActive, Mode=TwoWay}" Margin="10 5 0 0" Focusable="False"/>
         </StackPanel>
 
         <Grid Grid.Row="1">

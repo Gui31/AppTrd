@@ -115,104 +115,6 @@ namespace AppTrd.Charts.ViewModel
             }
         }
 
-        private bool _isTradingKeyboardActive;
-        public bool IsTradingKeyboardActive
-        {
-            get { return _isTradingKeyboardActive; }
-            set
-            {
-                if (_isTradingKeyboardActive == value)
-                    return;
-
-                _isTradingKeyboardActive = value;
-                RaisePropertyChanged(() => IsTradingKeyboardActive);
-            }
-        }
-
-        private double _size;
-        public double Size
-        {
-            get { return _size; }
-            set
-            {
-                if (_size == value)
-                    return;
-
-                _size = value;
-                RaisePropertyChanged(() => Size);
-            }
-        }
-
-        private bool _hasStop;
-        public bool HasStop
-        {
-            get { return _hasStop; }
-            set
-            {
-                if (_hasStop == value)
-                    return;
-
-                _hasStop = value;
-                RaisePropertyChanged(() => HasStop);
-            }
-        }
-
-        private bool _garantedStop;
-        public bool GarantedStop
-        {
-            get { return _garantedStop; }
-            set
-            {
-                if (_garantedStop == value)
-                    return;
-
-                _garantedStop = value;
-                RaisePropertyChanged(() => GarantedStop);
-            }
-        }
-
-        private int _stopDistance;
-        public int StopDistance
-        {
-            get { return _stopDistance; }
-            set
-            {
-                if (_stopDistance == value)
-                    return;
-
-                _stopDistance = value;
-                RaisePropertyChanged(() => StopDistance);
-            }
-        }
-
-        private bool _hasLimit;
-        public bool HasLimit
-        {
-            get { return _hasLimit; }
-            set
-            {
-                if (_hasLimit == value)
-                    return;
-
-                _hasLimit = value;
-                RaisePropertyChanged(() => HasLimit);
-            }
-        }
-
-        private int _limitDistance;
-        public int LimitDistance
-        {
-            get { return _limitDistance; }
-            set
-            {
-                if (_limitDistance == value)
-                    return;
-
-                _limitDistance = value;
-                RaisePropertyChanged(() => LimitDistance);
-            }
-        }
-
         private double _scalingFactor;
         public double ScalingFactor
         {
@@ -328,15 +230,6 @@ namespace AppTrd.Charts.ViewModel
                 _settingsService.SaveSettings<ChartsSettings>();
             }
 
-            HasStop = marketSettings.HasStop;
-            GarantedStop = marketSettings.GarantedStop;
-            StopDistance = marketSettings.StopDistance;
-
-            HasLimit = marketSettings.HasLimit;
-            LimitDistance = marketSettings.LimitDistance;
-
-            Size = marketSettings.Size;
-
             var tlp = marketSettings.TopLeftPeriod;
             if (tlp.Mode == PeriodMode.Time)
                 TopLeftCandleReceiver = _tradingService.GetCandleReceiver(_marketEpic, (Periods)tlp.TimePeriod, tlp.AverageOpen);
@@ -363,33 +256,6 @@ namespace AppTrd.Charts.ViewModel
 
         private void KeyPress(Key key)
         {
-            if (_keyboardSettings == null)
-                return;
-
-            if (_keyboardSettings.CloseAllKey != null && key == _keyboardSettings.CloseAllKey.Key)
-                CloseAllPosition();
-
-            if (IsTradingKeyboardActive == false)
-                return;
-
-            double? stop = HasStop ? (double?)StopDistance : null;
-            double? limit = HasLimit ? (double?)LimitDistance : null;
-
-            if (_keyboardSettings.BuyKey != null && key == _keyboardSettings.BuyKey.Key)
-                _tradingService.CreateOrder("BUY", _marketEpic, _currency, Size, null, stop, limit, GarantedStop);
-
-            if (_keyboardSettings.SellKey != null && key == _keyboardSettings.SellKey.Key)
-                _tradingService.CreateOrder("SELL", _marketEpic, _currency, Size, null, stop, limit, GarantedStop);
-        }
-
-        public void CloseAllPosition()
-        {
-            foreach (var positionModel in Positions.ToList())
-            {
-                _tradingService.CloseOrder(positionModel, positionModel.DealSize, null);
-            }
-
-            Positions.Clear();
         }
 
         private void PositionAddedMessageReceived(PositionAddedMessage position)
